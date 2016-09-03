@@ -38,7 +38,7 @@ namespace ExpressionEvaluator
 		private Expression ParseExpressionCore(int prec)
 		{
 			BinaryOperation operation;
-			int precendence;
+			int precedence;
 
 			var expr = ParsePrimaryExpression();
 
@@ -46,11 +46,11 @@ namespace ExpressionEvaluator
 			{
 				var operatorCandidate = Lexer.PeekToken();
 
-				if (TryResolveOperation(operatorCandidate, out operation, out precendence))
+				if (TryResolveOperation(operatorCandidate, out operation, out precedence))
 				{
 					Lexer.ReadToken();
 
-					if (precendence >= prec)
+					if (precedence >= prec)
 					{
 						var right = ParseExpressionCore(prec + 1);
 
@@ -74,34 +74,34 @@ namespace ExpressionEvaluator
 		/// <returns><c>true</c>, if the token is an operation, <c>false</c> otherwise.</returns>
 		/// <param name="candidateToken">The candidate token for operation.</param>
 		/// <param name="operation">The operation corresponding to the candidate token.</param>
-		/// <param name="precendence">The operator precendence for the resolved operation.</param>
-		private bool TryResolveOperation(TokenInfo candidateToken, out BinaryOperation operation, out int precendence)
+		/// <param name="precedence">The operator precedence for the resolved operation.</param>
+		private bool TryResolveOperation(TokenInfo candidateToken, out BinaryOperation operation, out int precedence)
 		{
 			switch (candidateToken.Kind) 
 			{
 				case TokenKind.Star:
 					operation = BinaryOperation.Multiply;
-					precendence = 2;
+					precedence = 2;
 					break;
 
 				case TokenKind.Slash:
 					operation = BinaryOperation.Divide;
-					precendence = 2;
+					precedence = 2;
 					break;
 
 				case TokenKind.Plus:
 					operation = BinaryOperation.Add;
-					precendence = 1;
+					precedence = 1;
 					break;
 
 				case TokenKind.Minus:
 					operation = BinaryOperation.Subtract;
-					precendence = 1;
+					precedence = 1;
 					break;
 					
 				default:
 					operation = BinaryOperation.None;
-					precendence = -1;
+					precedence = -1;
 					return false;
 			}
 
