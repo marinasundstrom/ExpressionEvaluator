@@ -34,12 +34,6 @@
     <Compile Include="ParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ExpressionEvaluator\ExpressionEvaluator.Core\ExpressionEvaluator.Core.csproj">
-      <Project>{CB0F2158-DC85-48FE-8BB9-8B41E76A4503}</Project>
-      <Name>ExpressionEvaluator.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="xunit.abstractions">
       <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.abstractions.dll</HintPath>
     </Reference>
@@ -55,6 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ExpressionEvaluator.Core\ExpressionEvaluator.Core.csproj">
+      <Project>{CB0F2158-DC85-48FE-8BB9-8B41E76A4503}</Project>
+      <Name>ExpressionEvaluator.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

@@ -36,7 +36,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="ExpressionEvaluator.Core\ExpressionEvaluator.Core.csproj">
+    <ProjectReference Include="..\ExpressionEvaluator.Core\ExpressionEvaluator.Core.csproj">
       <Project>{CB0F2158-DC85-48FE-8BB9-8B41E76A4503}</Project>
       <Name>ExpressionEvaluator.Core</Name>
     </ProjectReference>
