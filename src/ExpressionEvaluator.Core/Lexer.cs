@@ -79,7 +79,7 @@ namespace ExpressionEvaluator
 		/// Internal method for reading a token.
 		/// </summary>
 		/// <returns>The token core.</returns>
-		private TokenInfo ReadTokenCore()
+		internal TokenInfo ReadTokenCore()
 		{
 			while (!IsEofCore)
 			{
