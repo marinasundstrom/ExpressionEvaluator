@@ -18,6 +18,9 @@ namespace ExpressionEvaluator
 		public Lexer(TextReader textReader)
 		{
 			TextReader = textReader;
+
+            Line = 1;
+            Column = 1;
 		}
 
 		/// <summary>
@@ -37,13 +40,16 @@ namespace ExpressionEvaluator
 		{
 			if (state != null)
 			{
-				var peekedToken = state.Value.Token;
+                var s = (LexerState)state;
+				var peekedToken = s.Token;
+                Line = s.Line;
+                Column = s.Column;
 				return peekedToken;
 			}
 			else 
 			{
 				var peekToken = ReadTokenCore();
-				state = new LexerState(peekToken);
+				state = new LexerState(peekToken, Line, Column);
 				return peekToken;
 			}
 		}
@@ -83,6 +89,9 @@ namespace ExpressionEvaluator
 		{
 			while (!IsEofCore)
 			{
+                int line = Line;
+                int column = Column;
+
 				var c = PeekChar();
 
 				if (char.IsDigit(c))
@@ -97,7 +106,7 @@ namespace ExpressionEvaluator
 						c = PeekChar();
 					} while (char.IsDigit(c));
 
-					return new TokenInfo(TokenKind.Number, stringBuilder.Length, stringBuilder.ToString());
+					return new TokenInfo(TokenKind.Number, line, column, stringBuilder.Length, stringBuilder.ToString());
 				}
 				else 
 				{
@@ -106,34 +115,42 @@ namespace ExpressionEvaluator
 					switch (c) 
 					{
 						case '+':
-							return new TokenInfo(TokenKind.Plus, 1);
+							return new TokenInfo(TokenKind.Plus, line, column, 1);
 
 						case '-':
-							return new TokenInfo(TokenKind.Minus, 1);
+							return new TokenInfo(TokenKind.Minus, line, column, 1);
 
 						case '*':
-							return new TokenInfo(TokenKind.Star, 1);
+							return new TokenInfo(TokenKind.Star, line, column, 1);
 
 						case '/':
-							return new TokenInfo(TokenKind.Slash, 1);
+							return new TokenInfo(TokenKind.Slash, line, column, 1);
 
 						case '(':
-							return new TokenInfo(TokenKind.OpenParen, 1);
+							return new TokenInfo(TokenKind.OpenParen, line, column, 1);
 
 						case ')':
-							return new TokenInfo(TokenKind.CloseParen, 1);
+							return new TokenInfo(TokenKind.CloseParen, line, column, 1);
 
 						case ' ':
 							//return new TokenInfo(TokenKind.Whitespace, 1);
 							break;
 
-						default:
-						return new TokenInfo(TokenKind.Invalid, 1, c.ToString());
+                        case '\r':
+                            break;
+
+                        case '\n':
+                            Line++;
+                            Column = 1;
+                            break;
+
+                        default:
+						    return new TokenInfo(TokenKind.Invalid, line, column, 1, c.ToString());
 					}
 				}
 			}
 
-			return new TokenInfo(TokenKind.EndOfFile, 0);
+			return new TokenInfo(TokenKind.EndOfFile, Line, Column, 0);
 		}
 
 		private bool IsEofCore
@@ -144,8 +161,12 @@ namespace ExpressionEvaluator
 			}
 		}
 
-		private char ReadChar()
+        private int Line { get; set; }
+        private int Column { get; set; }
+
+        private char ReadChar()
 		{
+            Column++;
 			return (char)TextReader.Read();
 		}
 
@@ -159,12 +180,18 @@ namespace ExpressionEvaluator
 		/// </summary>
 		struct LexerState
 		{
-			public LexerState(TokenInfo token)
+			public LexerState(TokenInfo token, int line, int column)
 			{
 				Token = token;
+                Line = line;
+                Column = column;
 			}
 
 			public TokenInfo Token { get;}
-		}
+
+            public int Line { get; }
+
+            public int Column { get; }
+        }
 	}
 }

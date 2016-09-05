@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExpressionEvaluator.Properties;
+using System;
 namespace ExpressionEvaluator
 {
 	/// <summary>
@@ -13,6 +14,8 @@ namespace ExpressionEvaluator
 		public Parser(Lexer lexer)
 		{
 			Lexer = lexer;
+
+            Diagnostics = new DiagnosticsBag();
 		}
 
 		/// <summary>
@@ -21,11 +24,17 @@ namespace ExpressionEvaluator
 		/// <value>The lexer.</value>
 		public Lexer Lexer { get; }
 
-		/// <summary>
-		/// Parses an expression.
-		/// </summary>
-		/// <returns>An expression.</returns>
-		public Expression ParseExpression()
+        /// <summary>
+        /// Gets the diagnostics bag.
+        /// </summary>
+        /// <value>The diagnostics bag.</value>
+        public DiagnosticsBag Diagnostics { get; }
+
+        /// <summary>
+        /// Parses an expression.
+        /// </summary>
+        /// <returns>An expression.</returns>
+        public Expression ParseExpression()
 		{
 			return ParseExpressionCore(0);
 		}
@@ -123,15 +132,20 @@ namespace ExpressionEvaluator
 					expr = ParseExpression();
 					token = Lexer.ReadToken();
 					if(token.Kind != TokenKind.CloseParen)
-						throw new Exception();
-					break;
+                        Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token.GetSpan());
+                    break;
 
 				case TokenKind.Number:
 					expr = new NumberExpression(int.Parse(token.Value));
 					break;
 
-				default:
-					throw new Exception();
+                case TokenKind.EndOfFile:
+                    Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, token.GetSpan());
+                    break;
+
+                default:
+                    Diagnostics.AddError(Strings.Error_UnexpectedToken, token.GetSpan());
+                    break;
 			}
 
 			return expr;
