@@ -1,55 +1,18 @@
 ﻿namespace ExpressionEvaluator
 {
-	public class BinaryExpression : Expression
-	{
-		Expression left;
-		BinaryOperation operation;
-		Expression right;
+    public class BinaryExpression : Expression
+    {
+        public BinaryExpression(TokenInfo op, Expression left, Expression right)
+        {
+            Operator = op;
+            Left = left;
+            Right = right;
+        }
 
-		public BinaryExpression(BinaryOperation operation, Expression left, Expression right)
-		{
-			this.Operation = operation;
-			this.Left = left;
-			this.Right = right;
-		}
+        public Expression Left { get; }
 
-		public Expression Left
-		{
-			get
-			{
-				return left;
-			}
+        public TokenInfo Operator { get; }
 
-			set
-			{
-				left = value;
-			}
-		}
-
-		public BinaryOperation Operation
-		{
-			get
-			{
-				return operation;
-			}
-
-			set
-			{
-				operation = value;
-			}
-		}
-
-		public Expression Right
-		{
-			get
-			{
-				return right;
-			}
-
-			set
-			{
-				right = value;
-			}
-		}
-	}
+        public Expression Right { get; }
+    }
 }

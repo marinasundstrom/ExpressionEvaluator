@@ -6,6 +6,16 @@
 		Add,
 		Subtract,
 		Multiply,
-		Divide
-	}
+		Divide,
+        Is,
+        IsNot,
+        Equal,
+        NotEquals,
+        And,
+        Or,
+        Less,
+        Greater,
+        GreaterOrEquals,
+        LessOrEquals
+    }
 }

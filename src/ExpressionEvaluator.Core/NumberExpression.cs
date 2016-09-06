@@ -2,19 +2,19 @@
 {
 	public class NumberExpression : Expression
 	{
-		readonly int v;
-
-		public NumberExpression(int v)
+		public NumberExpression(TokenInfo token)
 		{
-			this.v = v;
+			Token = token;
 		}
 
-		public int Value
-		{
-			get
-			{
-				return v;
-			}
-		}
+		public TokenInfo Token { get; }
+
+        public int Value
+        {
+            get
+            {
+                return int.Parse(Token.Value);
+            }
+        }
 	}
 }

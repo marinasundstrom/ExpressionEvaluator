@@ -12,6 +12,20 @@
 		Star,
 		Slash,
 		OpenParen,
-		CloseParen
-	}
+		CloseParen,
+        Equal,
+        NotEquals,
+        Is,
+        IsNot,
+        Less,
+        Greater,
+        Negate,
+        Assign,
+        LessOrEqual,
+        GreaterOrEqual,
+        Caret,
+        Identifier,
+        Or,
+        And
+    }
 }

@@ -112,6 +112,8 @@ namespace ExpressionEvaluator
                 {
                     ReadChar();
 
+                    char c2 = ' ';
+
                     switch (c)
                     {
                         case '+':
@@ -125,6 +127,42 @@ namespace ExpressionEvaluator
 
                         case '/':
                             return new TokenInfo(TokenKind.Slash, line, column, 1);
+
+                        case '=':
+                            c2 = PeekChar();
+                            if (c2 == '=')
+                            {
+                                ReadChar();
+                                return new TokenInfo(TokenKind.Equal, line, column, 1);
+                            }
+                            return new TokenInfo(TokenKind.Assign, line, column, 1);
+
+                        case '!':
+                            c2 = PeekChar();
+                            if (c2 == '=')
+                            {
+                                ReadChar();
+                                return new TokenInfo(TokenKind.NotEquals, line, column, 1);
+                            }
+                            return new TokenInfo(TokenKind.Negate, line, column, 1);
+
+                        case '<':
+                            c2 = PeekChar();
+                            if (c2 == '=')
+                            {
+                                ReadChar();
+                                return new TokenInfo(TokenKind.LessOrEqual, line, column, 1);
+                            }
+                            return new TokenInfo(TokenKind.Less, line, column, 1);
+
+                        case '>':
+                            c2 = PeekChar();
+                            if (c2 == '=')
+                            {
+                                ReadChar();
+                                return new TokenInfo(TokenKind.GreaterOrEqual, line, column, 1);
+                            }
+                            return new TokenInfo(TokenKind.Greater, line, column, 1);
 
                         case '(':
                             return new TokenInfo(TokenKind.OpenParen, line, column, 1);
