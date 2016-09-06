@@ -6,7 +6,7 @@ namespace ExpressionEvaluator.Tests
 	public class ParserTest
 	{
 		[Fact]
-		public void MultiplicationBeforeAddition()
+		public void Precedence_MultiplicationBeforeAddition()
 		{
 			using (var input = Helpers.TextReaderFromString("2+3*6"))
 			{
@@ -21,7 +21,7 @@ namespace ExpressionEvaluator.Tests
 		}
 
 		[Fact]
-		public void ParenthesisExpression()
+		public void Precedence_ParenthesisExpressionBeforeMultiplication()
 		{
 			using (var input = Helpers.TextReaderFromString("(2+3)*2"))
 			{
@@ -30,7 +30,7 @@ namespace ExpressionEvaluator.Tests
 
 				var expr = parser.ParseExpression() as BinaryExpression;
 
-				Assert.True(expr.Left is BinaryExpression);
+				Assert.True(expr.Left is ParenthesisExpression);
 				Assert.True(expr.Right is NumberExpression);
 			}
 		}
