@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExpressionEvaluator.Properties;
+using System;
 using System.IO;
 using System.Text;
 
@@ -21,7 +22,15 @@ namespace ExpressionEvaluator
 
             Line = 1;
             Column = 1;
+
+            Diagnostics = new DiagnosticsBag();
         }
+
+        /// <summary>
+        /// Gets the diagnostics bag.
+        /// </summary>
+        /// <value>The diagnostics bag.</value>
+        public DiagnosticsBag Diagnostics { get; }
 
         /// <summary>
         /// Gets the text reader.
@@ -128,6 +137,9 @@ namespace ExpressionEvaluator
                         case '/':
                             return new TokenInfo(TokenKind.Slash, line, column, 1);
 
+                        case '%':
+                            return new TokenInfo(TokenKind.Percent, line, column, 1);
+
                         case '=':
                             c2 = PeekChar();
                             if (c2 == '=')
@@ -146,12 +158,28 @@ namespace ExpressionEvaluator
                             }
                             return new TokenInfo(TokenKind.Negate, line, column, 1);
 
+                        case '&':
+                            c2 = ReadChar();
+                            if (c2 == '&')
+                            {
+                                return new TokenInfo(TokenKind.And, line, column, 1);
+                            }
+                            goto default;
+
+                        case '|':
+                            c2 = ReadChar();
+                            if (c2 == '|')
+                            {
+                                return new TokenInfo(TokenKind.Or, line, column, 1);
+                            }
+                            goto default;
+
                         case '<':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.LessOrEqual, line, column, 1);
+                                return new TokenInfo(TokenKind.OpenAngleBracket, line, column, 1);
                             }
                             return new TokenInfo(TokenKind.Less, line, column, 1);
 
@@ -162,7 +190,7 @@ namespace ExpressionEvaluator
                                 ReadChar();
                                 return new TokenInfo(TokenKind.GreaterOrEqual, line, column, 1);
                             }
-                            return new TokenInfo(TokenKind.Greater, line, column, 1);
+                            return new TokenInfo(TokenKind.CloseAngleBracket, line, column, 1);
 
                         case '(':
                             return new TokenInfo(TokenKind.OpenParen, line, column, 1);
@@ -183,6 +211,7 @@ namespace ExpressionEvaluator
                             break;
 
                         default:
+                            Diagnostics.AddError(string.Format(Strings.Error_InvalidToken, c), new SourceSpan(new SourceLocation(line, column), new SourceLocation(Line, Column)));
                             return new TokenInfo(TokenKind.Invalid, line, column, 1, c.ToString());
                     }
                 }

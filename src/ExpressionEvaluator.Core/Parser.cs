@@ -15,7 +15,7 @@ namespace ExpressionEvaluator
         {
             Lexer = lexer;
 
-            Diagnostics = new DiagnosticsBag();
+            Diagnostics = lexer.Diagnostics;
         }
 
         /// <summary>
@@ -31,31 +31,99 @@ namespace ExpressionEvaluator
         public DiagnosticsBag Diagnostics { get; }
 
         /// <summary>
-        /// Parses an expression.
+        /// Parse an expression.
         /// </summary>
         /// <returns>An expression.</returns>
         public Expression ParseExpression()
         {
-            return ParseExpressionCore(0);
+            return ParseOrExpression();
+        }
+
+        private Expression ParseOrExpression()
+        {
+            Expression ret = ParseAndExpression();
+            var token = Lexer.PeekToken();
+            while (token.Kind == TokenKind.Or)
+            {
+                Lexer.ReadToken();
+                ret = new BinaryExpression(token, ret, ParseAndExpression());
+
+                token = Lexer.PeekToken();
+            }
+            return ret;
+        }
+
+        private Expression ParseAndExpression()
+        {
+            Expression ret = ParseNotExpression();
+            var token = Lexer.PeekToken();
+            while (token.Kind == TokenKind.And)
+            {
+                Lexer.ReadToken();
+                ret = new BinaryExpression(token, ret, ParseAndExpression());
+
+                token = Lexer.PeekToken();
+            }
+            return ret;
+        }
+
+        private Expression ParseNotExpression()
+        {
+            var token = Lexer.PeekToken();
+            if (token.Kind == TokenKind.NotKeyword)
+            {
+                Lexer.ReadToken();
+                Expression ret = new UnaryExpression(token, ParseNotExpression());
+                return ret;
+            }
+            else
+            {
+                return ParseComparisonExpression();
+            }
         }
 
         /// <summary>
-        /// Parses an expression (Internal)
+        /// Parse a comparison expression.
+        /// </summary>
+        /// <returns>An expression.</returns>
+        internal Expression ParseComparisonExpression()
+        {
+            Expression expr = ParseExpressionCore(0);
+            while (true)
+            {
+                var token = Lexer.PeekToken();
+
+                switch (token.Kind)
+                {
+                    case TokenKind.CloseAngleBracket:
+                    case TokenKind.GreaterOrEqual:
+                    case TokenKind.Less:
+                    case TokenKind.OpenAngleBracket:
+                        Lexer.ReadToken();
+                        break;
+                    default:
+                        return expr;
+                }
+                Expression rhs = ParseComparisonExpression();
+                expr = new BinaryExpression(token, expr, rhs);
+            }
+        }
+
+        /// <summary>
+        /// Parse an expression (Internal)
         /// </summary>
         /// <returns>An expression.</returns>
         /// <param name="precedence">The current level of precendence.</param>
         private Expression ParseExpressionCore(int precedence)
         {
-            BinaryOperation operation;
-            int prec;
-
             var expr = ParseFactorExpression();
 
             while (true)
             {
                 var operatorCandidate = Lexer.PeekToken();
 
-                if (!TryResolveOperation(operatorCandidate, out operation, out prec))
+                int prec;
+                if (!TryResolveOperatorPrecedence(operatorCandidate, out prec))
                     return expr;
                     
                 Lexer.ReadToken();
@@ -73,78 +141,27 @@ namespace ExpressionEvaluator
         }
 
         /// <summary>
-        /// Tries to resolve an operation from a specified candidate token.
+        /// Try to resolve an operation from a specified candidate token.
         /// </summary>
         /// <returns><c>true</c>, if the token is an operation, <c>false</c> otherwise.</returns>
         /// <param name="candidateToken">The candidate token for operation.</param>
-        /// <param name="operation">The operation corresponding to the candidate token.</param>
         /// <param name="precedence">The operator precedence for the resolved operation.</param>
-        private bool TryResolveOperation(TokenInfo candidateToken, out BinaryOperation operation, out int precedence)
+        private bool TryResolveOperatorPrecedence(TokenInfo candidateToken, out int precedence)
         {
             switch (candidateToken.Kind)
             {
+                case TokenKind.Percent:
                 case TokenKind.Slash:
-                    operation = BinaryOperation.Divide;
-                    precedence = 6;
-                    break;
-
                 case TokenKind.Star:
-                    operation = BinaryOperation.Multiply;
-                    precedence = 6;
-                    break;
-
-                case TokenKind.Minus:
-                    operation = BinaryOperation.Subtract;
-                    precedence = 5;
-                    break;
-
-                case TokenKind.Plus:
-                    operation = BinaryOperation.Add;
-                    precedence = 5;
-                    break;
-
-                case TokenKind.Less:
-                    operation = BinaryOperation.Less;
-                    precedence = 4;
-                    break;
-
-                case TokenKind.LessOrEqual:
-                    operation = BinaryOperation.LessOrEquals;
-                    precedence = 4;
-                    break;
-
-                case TokenKind.Greater:
-                    operation = BinaryOperation.Greater;
-                    precedence = 4;
-                    break;
-
-                case TokenKind.GreaterOrEqual:
-                    operation = BinaryOperation.GreaterOrEquals;
-                    precedence = 4;
-                    break;
-
-                case TokenKind.Equal:
-                    operation = BinaryOperation.Equal;
-                    precedence = 3;
-                    break;
-
-                case TokenKind.NotEquals:
-                    operation = BinaryOperation.NotEquals;
-                    precedence = 3;
-                    break;
-
-                case TokenKind.And:
-                    operation = BinaryOperation.And;
                     precedence = 2;
                     break;
 
-                case TokenKind.Or:
-                    operation = BinaryOperation.Or;
+                case TokenKind.Minus:
+                case TokenKind.Plus:
                     precedence = 1;
                     break;
 
                 default:
-                    operation = BinaryOperation.None;
                     precedence = -1;
                     return false;
             }
@@ -153,7 +170,7 @@ namespace ExpressionEvaluator
         }
 
         /// <summary>
-        /// Parses a factor expression.
+        /// Parse a factor expression.
         /// </summary>
         /// <returns>An expression.</returns>
         private Expression ParseFactorExpression()
@@ -182,7 +199,7 @@ namespace ExpressionEvaluator
         }
 
         /// <summary>
-        /// Parses a power expression.
+        /// Parse a power expression.
         /// </summary>
         /// <returns>An expression.</returns>
         private Expression ParsePowerExpression()
@@ -203,7 +220,7 @@ namespace ExpressionEvaluator
         }
 
         /// <summary>
-        /// Parses a primary expression.
+        /// Parse a primary expression.
         /// </summary>
         /// <returns>An expression.</returns>
         private Expression ParsePrimaryExpression()
@@ -237,19 +254,13 @@ namespace ExpressionEvaluator
                     break;
 
                 default:
-                    Diagnostics.AddError(Strings.Error_UnexpectedToken, token.GetSpan());
+                    if(token.Kind != TokenKind.Invalid) {
+                        Diagnostics.AddError(Strings.Error_UnexpectedToken, token.GetSpan());
+                    }
                     break;
             }
 
             return expr;
-        }
-
-        private void ParseParenthesisExpression(out Expression expr, out TokenInfo token)
-        {
-            expr = ParseExpression();
-            token = Lexer.ReadToken();
-            if (token.Kind != TokenKind.CloseParen)
-                Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token.GetSpan());
         }
     }
 }

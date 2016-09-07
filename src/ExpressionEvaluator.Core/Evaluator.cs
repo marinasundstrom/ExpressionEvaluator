@@ -45,6 +45,8 @@ namespace ExpressionEvaluator
                             case BinaryOperation.Divide:
                                 return left / right;
 
+                            case BinaryOperation.Modulo:
+                                return left % right;
                         }
                     }
                 }
@@ -68,6 +70,9 @@ namespace ExpressionEvaluator
 
                 case TokenKind.Slash:
                     return BinaryOperation.Divide;
+
+                case TokenKind.Percent:
+                    return BinaryOperation.Modulo;
             }
 
             throw new InvalidOperationException("The operation is not supported.");

@@ -16,6 +16,7 @@
         Less,
         Greater,
         GreaterOrEquals,
-        LessOrEquals
+        LessOrEquals,
+        Modulo
     }
 }

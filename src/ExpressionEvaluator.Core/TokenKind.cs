@@ -18,14 +18,16 @@
         Is,
         IsNot,
         Less,
-        Greater,
+        CloseAngleBracket,
         Negate,
         Assign,
-        LessOrEqual,
+        OpenAngleBracket,
         GreaterOrEqual,
         Caret,
         Identifier,
         Or,
-        And
+        And,
+        Percent,
+        NotKeyword
     }
 }

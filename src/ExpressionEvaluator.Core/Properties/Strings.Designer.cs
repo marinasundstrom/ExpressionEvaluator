@@ -71,6 +71,15 @@ namespace ExpressionEvaluator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid token &apos;{0}&apos;..
+        /// </summary>
+        internal static string Error_InvalidToken {
+            get {
+                return ResourceManager.GetString("Error_InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unexpected end-of-file..
         /// </summary>
         internal static string Error_UnexpectedEndOfFile {
