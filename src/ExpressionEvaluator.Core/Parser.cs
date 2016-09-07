@@ -43,11 +43,11 @@ namespace ExpressionEvaluator
         /// Parses an expression (Internal)
         /// </summary>
         /// <returns>An expression.</returns>
-        /// <param name="prec">The current level of precendence.</param>
-        private Expression ParseExpressionCore(int prec)
+        /// <param name="precedence">The current level of precendence.</param>
+        private Expression ParseExpressionCore(int precedence)
         {
             BinaryOperation operation;
-            int precedence;
+            int prec;
 
             var expr = ParseFactorExpression();
 
@@ -55,12 +55,12 @@ namespace ExpressionEvaluator
             {
                 var operatorCandidate = Lexer.PeekToken();
 
-                if (!TryResolveOperation(operatorCandidate, out operation, out precedence))
+                if (!TryResolveOperation(operatorCandidate, out operation, out prec))
                     return expr;
                     
                 Lexer.ReadToken();
 
-                if (precedence >= prec)
+                if (prec >= precedence)
                 {
                     var right = ParseExpressionCore(prec + 1);
                     expr = new BinaryExpression(operatorCandidate, expr, right);
