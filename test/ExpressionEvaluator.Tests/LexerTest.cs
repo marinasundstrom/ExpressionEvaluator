@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.Utilites;
+using System;
 using Xunit;
 
 namespace ExpressionEvaluator.Tests
@@ -8,7 +10,7 @@ namespace ExpressionEvaluator.Tests
 		[Fact]
 		public void ReadToken()
 		{
-			using (var input = Helpers.TextReaderFromString("2+3*6"))
+			using (var input = StringHelpers.TextReaderFromString("2+3*6"))
 			{
 				var lexer = new Lexer(input);
 				var token = lexer.ReadToken();
@@ -18,7 +20,7 @@ namespace ExpressionEvaluator.Tests
 		[Fact]
 		public void PeekToken()
 		{
-			using (var input = Helpers.TextReaderFromString("2+3*6"))
+			using (var input = StringHelpers.TextReaderFromString("2+3*6"))
 			{
 				var lexer = new Lexer(input);
 				var token = lexer.PeekToken();

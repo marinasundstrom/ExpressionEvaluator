@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ExpressionEvaluator
+namespace ExpressionEvaluator.Diagnostics
 {
     public class DiagnosticsBag : IEnumerable<Diagnostic>
     {

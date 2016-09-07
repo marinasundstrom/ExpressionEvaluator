@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.SyntaxAnalysis.AST;
+using System;
 namespace ExpressionEvaluator
 {
 	public static class Evaluator

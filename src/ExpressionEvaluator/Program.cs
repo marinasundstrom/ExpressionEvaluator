@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.SyntaxAnalysis;
+using ExpressionEvaluator.Utilites;
+using System;
 using System.Linq;
 
 namespace ExpressionEvaluator
@@ -13,7 +16,7 @@ namespace ExpressionEvaluator
 
                 var line = Console.ReadLine();
 
-                using (var input = Helpers.TextReaderFromString(line))
+                using (var input = StringHelpers.TextReaderFromString(line))
                 {
                     var lexer = new Lexer(input);
                     var parser = new Parser(lexer);

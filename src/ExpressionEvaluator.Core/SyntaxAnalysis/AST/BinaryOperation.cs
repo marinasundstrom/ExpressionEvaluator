@@ -1,4 +1,4 @@
-﻿namespace ExpressionEvaluator
+﻿namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
 	public enum BinaryOperation
 	{

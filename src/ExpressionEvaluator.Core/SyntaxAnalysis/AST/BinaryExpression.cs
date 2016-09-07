@@ -1,4 +1,6 @@
-﻿namespace ExpressionEvaluator
+﻿using ExpressionEvaluator.LexicalAnalysis;
+
+namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
     public class BinaryExpression : Expression
     {

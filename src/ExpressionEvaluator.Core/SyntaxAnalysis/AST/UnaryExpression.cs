@@ -1,4 +1,6 @@
-﻿namespace ExpressionEvaluator
+﻿using ExpressionEvaluator.LexicalAnalysis;
+
+namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
     internal class UnaryExpression : Expression
     {

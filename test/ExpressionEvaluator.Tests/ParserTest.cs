@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.SyntaxAnalysis;
+using ExpressionEvaluator.SyntaxAnalysis.AST;
+using ExpressionEvaluator.Utilites;
+using System;
 using Xunit;
 
 namespace ExpressionEvaluator.Tests
@@ -8,7 +12,7 @@ namespace ExpressionEvaluator.Tests
 		[Fact]
 		public void Precedence_MultiplicationBeforeAddition()
 		{
-			using (var input = Helpers.TextReaderFromString("2+3*6"))
+			using (var input = StringHelpers.TextReaderFromString("2+3*6"))
 			{
 				var lexer = new Lexer(input);
 				var parser = new Parser(lexer);
@@ -23,7 +27,7 @@ namespace ExpressionEvaluator.Tests
 		[Fact]
 		public void Precedence_ParenthesisExpressionBeforeMultiplication()
 		{
-			using (var input = Helpers.TextReaderFromString("(2+3)*2"))
+			using (var input = StringHelpers.TextReaderFromString("(2+3)*2"))
 			{
 				var lexer = new Lexer(input);
 				var parser = new Parser(lexer);

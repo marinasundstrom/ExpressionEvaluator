@@ -1,4 +1,4 @@
-﻿namespace ExpressionEvaluator
+﻿namespace ExpressionEvaluator.LexicalAnalysis
 {
 	public enum TokenKind
 	{

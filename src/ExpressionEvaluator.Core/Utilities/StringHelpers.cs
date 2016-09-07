@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 
-namespace ExpressionEvaluator
+namespace ExpressionEvaluator.Utilites
 {
-	public static class Helpers
+	public static class StringHelpers
 	{
 		public static TextReader TextReaderFromString(string text)
 		{

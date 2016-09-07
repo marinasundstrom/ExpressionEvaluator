@@ -1,6 +1,9 @@
-﻿using ExpressionEvaluator.Properties;
+﻿using ExpressionEvaluator.Diagnostics;
+using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.Properties;
+using ExpressionEvaluator.SyntaxAnalysis.AST;
 using System;
-namespace ExpressionEvaluator
+namespace ExpressionEvaluator.SyntaxAnalysis
 {
     /// <summary>
     /// Parser.

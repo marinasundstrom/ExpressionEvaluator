@@ -1,9 +1,10 @@
-﻿using ExpressionEvaluator.Properties;
+﻿using ExpressionEvaluator.Diagnostics;
+using ExpressionEvaluator.Properties;
 using System;
 using System.IO;
 using System.Text;
 
-namespace ExpressionEvaluator
+namespace ExpressionEvaluator.LexicalAnalysis
 {
     /// <summary>
     /// Lexer.

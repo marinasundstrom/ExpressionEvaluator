@@ -1,4 +1,4 @@
-﻿namespace ExpressionEvaluator
+﻿namespace ExpressionEvaluator.Diagnostics
 {
     public class Diagnostic
     {
