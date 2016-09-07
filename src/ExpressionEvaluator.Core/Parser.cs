@@ -169,7 +169,7 @@ namespace ExpressionEvaluator
             return true;
         }
 
-        /// <summary>
+        /// <summar>y
         /// Parse a factor expression.
         /// </summary>
         /// <returns>An expression.</returns>

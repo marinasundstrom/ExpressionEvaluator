@@ -103,7 +103,21 @@ namespace ExpressionEvaluator
 
                 var c = PeekChar();
 
-                if (char.IsDigit(c))
+                if (char.IsLetter(c))
+                {
+                    var stringBuilder = new StringBuilder();
+                    do
+                    {
+                        ReadChar();
+
+                        stringBuilder.Append(c);
+
+                        c = PeekChar();
+                    } while (char.IsLetterOrDigit(c));
+
+                    return new TokenInfo(TokenKind.Identifier, line, column, stringBuilder.Length, stringBuilder.ToString());
+                }
+                else if (char.IsDigit(c))
                 {
                     var stringBuilder = new StringBuilder();
                     do

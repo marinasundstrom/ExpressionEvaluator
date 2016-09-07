@@ -1,56 +1,60 @@
 ﻿using System;
 namespace ExpressionEvaluator
 {
-	public class Evaluator
+	public static class Evaluator
 	{
-		public Evaluator()
-		{
-		}
-
 		public static double EvaluateExpression(Expression expression) 
 		{
-			var number = expression as NumberExpression;
-			if (number != null)
-			{
-				return number.Value;
-			}
-			else 
-			{
-                var parenthesis = expression as ParenthesisExpression;
-                if (parenthesis != null)
+            var identifier = expression as IdentifierExpression;
+            if (identifier != null)
+            {
+                return 0;
+            }
+            else
+            {
+                var number = expression as NumberExpression;
+                if (number != null)
                 {
-                    return Evaluator.EvaluateExpression(parenthesis.Expression);
+                    return number.Value;
                 }
                 else
                 {
-                    var binaryExpression = expression as BinaryExpression;
-                    if (binaryExpression != null)
+                    var parenthesis = expression as ParenthesisExpression;
+                    if (parenthesis != null)
                     {
-                        var left = Evaluator.EvaluateExpression(binaryExpression.Left);
-                        var right = Evaluator.EvaluateExpression(binaryExpression.Right);
-
-                        var operation = ResolveOperation(binaryExpression);
-
-                        switch (operation)
+                        return Evaluator.EvaluateExpression(parenthesis.Expression);
+                    }
+                    else
+                    {
+                        var binaryExpression = expression as BinaryExpression;
+                        if (binaryExpression != null)
                         {
-                            case BinaryOperation.Add:
-                                return left + right;
+                            var left = Evaluator.EvaluateExpression(binaryExpression.Left);
+                            var right = Evaluator.EvaluateExpression(binaryExpression.Right);
 
-                            case BinaryOperation.Subtract:
-                                return left - right;
+                            var operation = ResolveOperation(binaryExpression);
 
-                            case BinaryOperation.Multiply:
-                                return left * right;
+                            switch (operation)
+                            {
+                                case BinaryOperation.Add:
+                                    return left + right;
 
-                            case BinaryOperation.Divide:
-                                return left / right;
+                                case BinaryOperation.Subtract:
+                                    return left - right;
 
-                            case BinaryOperation.Modulo:
-                                return left % right;
+                                case BinaryOperation.Multiply:
+                                    return left * right;
+
+                                case BinaryOperation.Divide:
+                                    return left / right;
+
+                                case BinaryOperation.Modulo:
+                                    return left % right;
+                            }
                         }
                     }
                 }
-			}
+            }
 
 			throw new Exception();
 		}
