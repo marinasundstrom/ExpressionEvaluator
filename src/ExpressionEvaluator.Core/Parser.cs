@@ -55,20 +55,15 @@ namespace ExpressionEvaluator
             {
                 var operatorCandidate = Lexer.PeekToken();
 
-                if (TryResolveOperation(operatorCandidate, out operation, out precedence))
+                if (!TryResolveOperation(operatorCandidate, out operation, out precedence))
+                    return expr;
+                    
+                Lexer.ReadToken();
+
+                if (precedence >= prec)
                 {
-                    Lexer.ReadToken();
-
-                    if (precedence >= prec)
-                    {
-                        var right = ParseExpressionCore(prec + 1);
-
-                        expr = new BinaryExpression(operatorCandidate, expr, right);
-                    }
-                    else
-                    {
-                        return expr;
-                    }
+                    var right = ParseExpressionCore(prec + 1);
+                    expr = new BinaryExpression(operatorCandidate, expr, right);
                 }
                 else
                 {
