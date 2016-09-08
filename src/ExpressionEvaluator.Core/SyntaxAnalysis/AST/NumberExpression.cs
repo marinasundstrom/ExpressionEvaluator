@@ -1,22 +1,10 @@
-﻿using ExpressionEvaluator.LexicalAnalysis;
-
-namespace ExpressionEvaluator.SyntaxAnalysis.AST
+﻿namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
-	public class NumberExpression : Expression
-	{
-		public NumberExpression(TokenInfo token)
-		{
-			Token = token;
-		}
-
-		public TokenInfo Token { get; }
-
-        public int Value
+    public abstract class NumberExpression : Expression
+    {
+        public NumberExpression()
         {
-            get
-            {
-                return int.Parse(Token.Value);
-            }
+            
         }
-	}
+    }
 }

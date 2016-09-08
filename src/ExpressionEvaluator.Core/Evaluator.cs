@@ -17,7 +17,19 @@ namespace ExpressionEvaluator
                 var number = expression as NumberExpression;
                 if (number != null)
                 {
-                    return number.Value;
+                    var integer = expression as IntegerNumberExpression;
+                    if (integer != null)
+                    {
+                        return integer.Value;
+                    }
+                    else
+                    {
+                        var real = expression as RealNumberExpression;
+                        if (real != null)
+                        {
+                            return real.Value;
+                        }
+                    }
                 }
                 else
                 {

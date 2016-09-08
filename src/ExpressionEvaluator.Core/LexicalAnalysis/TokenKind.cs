@@ -28,6 +28,7 @@
         Or,
         And,
         Percent,
-        NotKeyword
+        NotKeyword,
+        Period
     }
 }

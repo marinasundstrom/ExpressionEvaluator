@@ -230,13 +230,15 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         {
             Expression expr = null;
 
-            var token = Lexer.ReadToken();
+            TokenInfo token, token2, token3;
+
+            token = Lexer.ReadToken();
 
             switch (token.Kind)
             {
                 case TokenKind.OpenParen:
                     expr = ParseExpression();
-                    var token2 = Lexer.ReadToken();
+                    token2 = Lexer.ReadToken();
                     if (token2.Kind != TokenKind.CloseParen)
                     {
                         Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token.GetSpan());
@@ -245,7 +247,27 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     break;
 
                 case TokenKind.Number:
-                    expr = new NumberExpression(token);
+                    token2 = Lexer.PeekToken();
+                    if (token2.Kind == TokenKind.Period)
+                    {
+                        Lexer.ReadToken();
+
+                        token3 = Lexer.PeekToken();
+                        if (token3.Kind == TokenKind.Number)
+                        {
+                            Lexer.ReadToken();
+
+                            expr = new RealNumberExpression(token, token2, token3);
+                        }
+                        else
+                        {
+                            Diagnostics.AddError(string.Format(Strings.Error_UnexpectedToken, token3.Value), token.GetSpan());
+                        }
+                    }
+                    else
+                    {
+                        expr = new IntegerNumberExpression(token);
+                    }
                     break;
 
                 case TokenKind.Identifier:

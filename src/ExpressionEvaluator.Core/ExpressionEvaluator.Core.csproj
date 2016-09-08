@@ -32,6 +32,8 @@
     <Compile Include="Diagnostics\DiagnosticsBag.cs" />
     <Compile Include="Diagnostics\DiagnosticType.cs" />
     <Compile Include="SyntaxAnalysis\Ast\IdentifierExpression.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\IntegerNumberExpression.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\NumberExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\ParenthesisExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Strings.Designer.cs">
@@ -50,7 +52,7 @@
     <Compile Include="SyntaxAnalysis\Ast\Expression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\BinaryOperation.cs" />
     <Compile Include="SyntaxAnalysis\Ast\BinaryExpression.cs" />
-    <Compile Include="SyntaxAnalysis\Ast\NumberExpression.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\RealNumberExpression.cs" />
     <Compile Include="Evaluator.cs" />
     <Compile Include="SyntaxAnalysis\Ast\UnaryExpression.cs" />
   </ItemGroup>
