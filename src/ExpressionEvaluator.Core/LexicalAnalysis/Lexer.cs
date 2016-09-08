@@ -22,7 +22,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
             TextReader = textReader;
 
             Line = 1;
-            Column = 1;
+            Column = 0;
 
             Diagnostics = new DiagnosticsBag();
         }
@@ -228,7 +228,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
 
                         case '\n':
                             Line++;
-                            Column = 1;
+                            Column = 0;
                             break;
 
                         default:

@@ -261,7 +261,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                         }
                         else
                         {
-                            Diagnostics.AddError(string.Format(Strings.Error_UnexpectedToken, token3.Value), token.GetSpan());
+                            Diagnostics.AddError(string.Format(Strings.Error_UnexpectedToken, token3.Value), token3.GetSpan());
                         }
                     }
                     else
