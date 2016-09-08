@@ -164,6 +164,9 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             }
                             return new TokenInfo(TokenKind.Assign, line, column, 1);
 
+                        case '^':
+                            return new TokenInfo(TokenKind.Caret, line, column, 1, ".");
+
                         case '.':
                             return new TokenInfo(TokenKind.Period, line, column, 1, ".");
 

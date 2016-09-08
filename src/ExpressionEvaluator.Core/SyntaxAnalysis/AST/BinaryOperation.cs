@@ -17,6 +17,7 @@
         Greater,
         GreaterOrEquals,
         LessOrEquals,
-        Modulo
+        Modulo,
+        Power
     }
 }

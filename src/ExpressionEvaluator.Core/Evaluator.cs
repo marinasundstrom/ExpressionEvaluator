@@ -64,6 +64,9 @@ namespace ExpressionEvaluator
 
                                 case BinaryOperation.Modulo:
                                     return left % right;
+
+                                case BinaryOperation.Power:
+                                    return Math.Pow(left, right);
                             }
                         }
                     }
@@ -91,6 +94,9 @@ namespace ExpressionEvaluator
 
                 case TokenKind.Percent:
                     return BinaryOperation.Modulo;
+
+                case TokenKind.Caret:
+                    return BinaryOperation.Power;
             }
 
             throw new InvalidOperationException("The operation is not supported.");
