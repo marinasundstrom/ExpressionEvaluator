@@ -172,7 +172,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             return true;
         }
 
-        /// <summar>y
+        /// <summary>
         /// Parse a factor expression.
         /// </summary>
         /// <returns>An expression.</returns>
