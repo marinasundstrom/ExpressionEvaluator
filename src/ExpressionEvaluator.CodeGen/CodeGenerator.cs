@@ -109,7 +109,7 @@ namespace ExpressionEvaluator.CodeGen
 
                                 switch (operation)
                                 {
-                                    case BinaryOperation.Negate:
+                                    case BinaryOperation.Negative:
                                         gen.Emit(OpCodes.Neg);
                                         break;
                                 }
@@ -151,7 +151,7 @@ namespace ExpressionEvaluator.CodeGen
             switch (unaryExpression.Operator.Kind)
             {
                 case TokenKind.Minus:
-                    return BinaryOperation.Negate;
+                    return BinaryOperation.Negative;
 
                 case TokenKind.Plus:
                     return BinaryOperation.Postive;

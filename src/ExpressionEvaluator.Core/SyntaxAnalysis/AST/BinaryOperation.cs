@@ -19,7 +19,7 @@
         LessOrEquals,
         Modulo,
         Power,
-        Negate,
+        Negative,
         Postive
     }
 }
