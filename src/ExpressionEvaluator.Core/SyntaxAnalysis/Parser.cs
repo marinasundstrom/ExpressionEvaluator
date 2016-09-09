@@ -261,11 +261,14 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     }
                     if (expr == null)
                     {
-                        Diagnostics.AddError(Strings.Error_ExpressionExpected, token2.GetSpan());
+                        Diagnostics.AddError(string.Format(Strings.Error_InvalidExpressionTerm, token2.Value), token2.GetSpan());
                     }
-                    if (!Eat(TokenKind.CloseParen, out token2))
+                    else
                     {
-                        Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token2.GetSpan());
+                        if (!Eat(TokenKind.CloseParen, out token2))
+                        {
+                            Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token2.GetSpan());
+                        }
                     }
                     expr = new ParenthesisExpression(token, expr, token2);
                     break;

@@ -80,6 +80,15 @@ namespace ExpressionEvaluator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid expression term &quot;{0}&quot;..
+        /// </summary>
+        internal static string Error_InvalidExpressionTerm {
+            get {
+                return ResourceManager.GetString("Error_InvalidExpressionTerm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid token &apos;{0}&apos;..
         /// </summary>
         internal static string Error_InvalidToken {
