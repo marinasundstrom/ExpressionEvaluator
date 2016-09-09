@@ -71,6 +71,15 @@ namespace ExpressionEvaluator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expected expression..
+        /// </summary>
+        internal static string Error_ExpressionExpected {
+            get {
+                return ResourceManager.GetString("Error_ExpressionExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid token &apos;{0}&apos;..
         /// </summary>
         internal static string Error_InvalidToken {

@@ -254,10 +254,18 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     break;
 
                 case TokenKind.OpenParen:
-                    expr = ParseExpression();
+                    token2 = PeekToken();
+                    if (token2.Kind != TokenKind.CloseParen)
+                    {
+                        expr = ParseExpression();
+                    }
+                    if (expr == null)
+                    {
+                        Diagnostics.AddError(string.Format(Strings.Error_ExpressionExpected, ')'), token2.GetSpan());
+                    }
                     if (!Eat(TokenKind.CloseParen, out token2))
                     {
-                        Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token.GetSpan());
+                        Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token2.GetSpan());
                     }
                     expr = new ParenthesisExpression(token, expr, token2);
                     break;
@@ -290,14 +298,12 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private bool MaybeEat(TokenKind kind, out TokenInfo tokenInfo)
         {
-            var token = PeekToken();
-            if(token.Kind == kind)
+            tokenInfo = PeekToken();
+            if (tokenInfo.Kind == kind)
             {
-                tokenInfo = token;
                 ReadToken();
                 return true;
             }
-            tokenInfo = TokenInfo.Empty;
             return false;
         }
 
@@ -309,13 +315,11 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private bool Eat(TokenKind kind, out TokenInfo tokenInfo)
         {
-            var token = ReadToken();
-            if (token.Kind == kind)
+            tokenInfo = ReadToken();
+            if (tokenInfo.Kind == kind)
             {
-                tokenInfo = token;
                 return true;
             }
-            tokenInfo = TokenInfo.Empty;
             return false;
         }
 
