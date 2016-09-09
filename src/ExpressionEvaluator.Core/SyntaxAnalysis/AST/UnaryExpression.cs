@@ -2,7 +2,7 @@
 
 namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
-    internal class UnaryExpression : Expression
+    public class UnaryExpression : Expression
     {
         public UnaryExpression(TokenInfo op, Expression expression)
         {

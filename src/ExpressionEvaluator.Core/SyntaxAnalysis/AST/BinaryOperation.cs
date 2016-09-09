@@ -18,6 +18,8 @@
         GreaterOrEquals,
         LessOrEquals,
         Modulo,
-        Power
+        Power,
+        Negate,
+        Postive
     }
 }

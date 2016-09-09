@@ -178,11 +178,13 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             switch (token.Kind)
             {
                 case TokenKind.Plus:
+                    ReadToken();
                     expr = ParseFactorExpression();
                     expr = new UnaryExpression(token, expr);
                     break;
 
                 case TokenKind.Minus:
+                    ReadToken();
                     expr = ParseFactorExpression();
                     expr = new UnaryExpression(token, expr);
                     break;

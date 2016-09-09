@@ -98,6 +98,23 @@ namespace ExpressionEvaluator.CodeGen
                                     break;
                             }
                         }
+                        else
+                        {
+                            var unaryExpression = expression as UnaryExpression;
+                            if (unaryExpression != null)
+                            {
+                                VisitExpression(unaryExpression.Expression);
+
+                                var operation = ResolveOperation(unaryExpression);
+
+                                switch (operation)
+                                {
+                                    case BinaryOperation.Negate:
+                                        gen.Emit(OpCodes.Neg);
+                                        break;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -124,6 +141,20 @@ namespace ExpressionEvaluator.CodeGen
 
                 case TokenKind.Caret:
                     return BinaryOperation.Power;
+            }
+
+            throw new InvalidOperationException("The operation is not supported.");
+        }
+
+        private static BinaryOperation ResolveOperation(UnaryExpression unaryExpression)
+        {
+            switch (unaryExpression.Operator.Kind)
+            {
+                case TokenKind.Minus:
+                    return BinaryOperation.Negate;
+
+                case TokenKind.Plus:
+                    return BinaryOperation.Postive;
             }
 
             throw new InvalidOperationException("The operation is not supported.");
