@@ -2,7 +2,7 @@
 
 namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
-    internal class IdentifierExpression : Expression
+    public class IdentifierExpression : Expression
     {
         public IdentifierExpression(TokenInfo token)
         {

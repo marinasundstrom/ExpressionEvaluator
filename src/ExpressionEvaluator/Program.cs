@@ -1,4 +1,5 @@
-﻿using ExpressionEvaluator.LexicalAnalysis;
+﻿using ExpressionEvaluator.CodeGen;
+using ExpressionEvaluator.LexicalAnalysis;
 using ExpressionEvaluator.SyntaxAnalysis;
 using ExpressionEvaluator.Utilites;
 using System;
@@ -36,9 +37,9 @@ namespace ExpressionEvaluator
 
                     try
                     {
-                        var result = Evaluator.EvaluateExpression(expression);
+                        var result = CodeGenerator.Generate(expression);
 
-                        Console.WriteLine(result);
+                        Console.WriteLine(result());
                     }
                     catch (Exception e)
                     {
