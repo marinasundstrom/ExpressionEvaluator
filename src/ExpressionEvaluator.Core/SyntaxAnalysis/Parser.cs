@@ -204,12 +204,8 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         {
             Expression expr = ParsePrimaryExpression();
 
-            TokenInfo token = PeekToken();
-
-            if (token.Kind == TokenKind.Caret)
+            if (MaybeEat(TokenKind.Caret, out var token))
             {
-                ReadToken();
-
                 Expression right = ParseFactorExpression();
                 expr = new BinaryExpression(token, expr, right);
             }
@@ -255,7 +251,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
                 case TokenKind.OpenParen:
                     token2 = PeekToken();
-                    if (token2.Kind != TokenKind.CloseParen)
+                    if (!MaybeEat(TokenKind.CloseParen, out token2))
                     {
                         expr = ParseExpression();
                     }
