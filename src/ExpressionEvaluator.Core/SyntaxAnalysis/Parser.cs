@@ -261,7 +261,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     }
                     if (expr == null)
                     {
-                        Diagnostics.AddError(string.Format(Strings.Error_ExpressionExpected, ')'), token2.GetSpan());
+                        Diagnostics.AddError(Strings.Error_ExpressionExpected, token2.GetSpan());
                     }
                     if (!Eat(TokenKind.CloseParen, out token2))
                     {
