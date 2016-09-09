@@ -277,12 +277,6 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                 case TokenKind.EndOfFile:
                     Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, token.GetSpan());
                     break;
-
-                default:
-                    if(token.Kind != TokenKind.Invalid) {
-                        Diagnostics.AddError(Strings.Error_UnexpectedToken, token.GetSpan());
-                    }
-                    break;
             }
 
             return expr;

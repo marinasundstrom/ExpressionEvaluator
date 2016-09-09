@@ -220,7 +220,6 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             return new TokenInfo(TokenKind.CloseParen, line, column, 1);
 
                         case ' ':
-                            //return new TokenInfo(TokenKind.Whitespace, 1);
                             break;
 
                         case '\r':
