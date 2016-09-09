@@ -120,11 +120,8 @@
   <data name="Error_ExpectedToken" xml:space="preserve">
     <value>Expected '{0}'.</value>
   </data>
-  <data name="Error_ExpressionExpected" xml:space="preserve">
-    <value>Expected expression.</value>
-  </data>
   <data name="Error_InvalidExpressionTerm" xml:space="preserve">
-    <value>Invalid expression term "{0}".</value>
+    <value>Invalid expression term '{0}'.</value>
   </data>
   <data name="Error_InvalidToken" xml:space="preserve">
     <value>Invalid token '{0}'.</value>
