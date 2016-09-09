@@ -45,13 +45,10 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         private Expression ParseOrExpression()
         {
             Expression ret = ParseAndExpression();
-            var token = Lexer.PeekToken();
-            while (token.Kind == TokenKind.Or)
+            TokenInfo token;
+            while (MaybeEat(TokenKind.Or, out token))
             {
-                Lexer.ReadToken();
                 ret = new BinaryExpression(token, ret, ParseAndExpression());
-
-                token = Lexer.PeekToken();
             }
             return ret;
         }
@@ -59,23 +56,19 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         private Expression ParseAndExpression()
         {
             Expression ret = ParseNotExpression();
-            var token = Lexer.PeekToken();
-            while (token.Kind == TokenKind.And)
+            TokenInfo token;
+            while (MaybeEat(TokenKind.And, out token))
             {
-                Lexer.ReadToken();
                 ret = new BinaryExpression(token, ret, ParseAndExpression());
-
-                token = Lexer.PeekToken();
             }
             return ret;
         }
 
         private Expression ParseNotExpression()
         {
-            var token = Lexer.PeekToken();
-            if (token.Kind == TokenKind.NotKeyword)
+            var token = TokenInfo.Empty;
+            if (MaybeEat(TokenKind.NotKeyword, out token))
             {
-                Lexer.ReadToken();
                 Expression ret = new UnaryExpression(token, ParseNotExpression());
                 return ret;
             }
@@ -94,7 +87,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             Expression expr = ParseExpressionCore(0);
             while (true)
             {
-                var token = Lexer.PeekToken();
+                var token = PeekToken();
 
                 switch (token.Kind)
                 {
@@ -102,7 +95,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     case TokenKind.GreaterOrEqual:
                     case TokenKind.Less:
                     case TokenKind.OpenAngleBracket:
-                        Lexer.ReadToken();
+                        ReadToken();
                         break;
                     default:
                         return expr;
@@ -123,13 +116,13 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
             while (true)
             {
-                var operatorCandidate = Lexer.PeekToken();
+                var operatorCandidate = PeekToken();
 
                 int prec;
                 if (!TryResolveOperatorPrecedence(operatorCandidate, out prec))
                     return expr;
-                    
-                Lexer.ReadToken();
+
+                ReadToken();
 
                 if (prec >= precedence)
                 {
@@ -180,7 +173,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         {
             Expression expr;
 
-            TokenInfo token = Lexer.PeekToken();
+            TokenInfo token = PeekToken();
 
             switch (token.Kind)
             {
@@ -209,11 +202,11 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         {
             Expression expr = ParsePrimaryExpression();
 
-            TokenInfo token = Lexer.PeekToken();
+            TokenInfo token = PeekToken();
 
             if (token.Kind == TokenKind.Caret)
             {
-                Lexer.ReadToken();
+                ReadToken();
 
                 Expression right = ParseFactorExpression();
                 expr = new BinaryExpression(token, expr, right);
@@ -232,31 +225,19 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
             TokenInfo token, token2, token3;
 
-            token = Lexer.ReadToken();
+            token = ReadToken();
 
             switch (token.Kind)
             {
-                case TokenKind.OpenParen:
-                    expr = ParseExpression();
-                    token2 = Lexer.ReadToken();
-                    if (token2.Kind != TokenKind.CloseParen)
-                    {
-                        Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token.GetSpan());
-                    }
-                    expr = new ParenthesisExpression(token, expr, token2);
+                case TokenKind.Identifier:
+                    expr = new IdentifierExpression(token);
                     break;
 
                 case TokenKind.Number:
-                    token2 = Lexer.PeekToken();
-                    if (token2.Kind == TokenKind.Period)
+                    if (MaybeEat(TokenKind.Period, out token2))
                     {
-                        Lexer.ReadToken();
-
-                        token3 = Lexer.PeekToken();
-                        if (token3.Kind == TokenKind.Number)
+                        if (MaybeEat(TokenKind.Number, out token3))
                         {
-                            Lexer.ReadToken();
-
                             expr = new RealNumberExpression(token, token2, token3);
                         }
                         else
@@ -270,8 +251,13 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     }
                     break;
 
-                case TokenKind.Identifier:
-                    expr = new IdentifierExpression(token);
+                case TokenKind.OpenParen:
+                    expr = ParseExpression();
+                    if (Eat(TokenKind.CloseParen, out token2))
+                    {
+                        Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token.GetSpan());
+                    }
+                    expr = new ParenthesisExpression(token, expr, token2);
                     break;
 
                 case TokenKind.EndOfFile:
@@ -281,5 +267,56 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
             return expr;
         }
+
+        #region Lexer helpers
+
+        private TokenInfo PeekToken()
+        {
+            return Lexer.PeekToken();
+        }
+
+        private TokenInfo ReadToken()
+        {
+            return Lexer.ReadToken();
+        }
+
+        private bool MaybeEat(TokenKind kind)
+        {
+            TokenInfo tokenInfo;
+            return MaybeEat(kind, out tokenInfo);
+        }
+
+        private bool MaybeEat(TokenKind kind, out TokenInfo tokenInfo)
+        {
+            var token = PeekToken();
+            if(token.Kind == kind)
+            {
+                tokenInfo = token;
+                ReadToken();
+                return true;
+            }
+            tokenInfo = TokenInfo.Empty;
+            return false;
+        }
+
+        private bool Eat(TokenKind kind)
+        {
+            TokenInfo tokenInfo;
+            return Eat(kind, out tokenInfo);
+        }
+
+        private bool Eat(TokenKind kind, out TokenInfo tokenInfo)
+        {
+            var token = ReadToken();
+            if (token.Kind == kind)
+            {
+                tokenInfo = token;
+                return true;
+            }
+            tokenInfo = TokenInfo.Empty;
+            return false;
+        }
+
+        #endregion
     }
 }

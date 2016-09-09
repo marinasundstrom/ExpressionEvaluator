@@ -26,5 +26,7 @@
         public int Column { get; }
 
         public int Width { get; }
-	}
+
+        public static TokenInfo Empty { get; } = default(TokenInfo);
+    }
 }
