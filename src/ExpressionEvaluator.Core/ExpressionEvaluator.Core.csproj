@@ -28,6 +28,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SyntaxAnalysis\ITreeVisitor.cs" />
     <Compile Include="Diagnostics\Diagnostic.cs" />
     <Compile Include="Diagnostics\DiagnosticsBag.cs" />
     <Compile Include="Diagnostics\DiagnosticType.cs" />

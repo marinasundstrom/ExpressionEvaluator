@@ -1,4 +1,5 @@
 ﻿using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.SyntaxAnalysis;
 using ExpressionEvaluator.SyntaxAnalysis.AST;
 using System;
 using System.Collections.Generic;
@@ -9,20 +10,23 @@ using System.Threading.Tasks;
 
 namespace ExpressionEvaluator.CodeGen
 {
-    public static class CodeGenerator
+    public class CodeGenerator : ITreeVisitor
     {
-        public static Func<double> Generate(Expression expression)
+        ILGenerator gen;
+
+        public Func<double> Generate(Expression expression)
         {
             var method = new DynamicMethod("Function", typeof(double), new Type[0]);
-            var gen = method.GetILGenerator();
-            GenerateExpression(gen, expression);
+            gen = method.GetILGenerator();
+
+            VisitExpression(expression);
 
             gen.Emit(OpCodes.Ret);
 
             return (Func<double>)method.CreateDelegate(typeof(Func<double>));
         }
 
-        public static void GenerateExpression(ILGenerator gen, Expression expression)
+        public void VisitExpression(Expression expression)
         {
             var identifier = expression as IdentifierExpression;
             if (identifier != null)
@@ -61,8 +65,8 @@ namespace ExpressionEvaluator.CodeGen
                         var binaryExpression = expression as BinaryExpression;
                         if (binaryExpression != null)
                         {
-                            GenerateExpression(gen, binaryExpression.Left);
-                            GenerateExpression(gen, binaryExpression.Right);
+                            VisitExpression(binaryExpression.Left);
+                            VisitExpression(binaryExpression.Right);
 
                             var operation = ResolveOperation(binaryExpression);
 

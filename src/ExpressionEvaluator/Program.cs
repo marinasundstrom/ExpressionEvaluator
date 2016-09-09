@@ -37,7 +37,8 @@ namespace ExpressionEvaluator
 
                     try
                     {
-                        var result = CodeGenerator.Generate(expression);
+                        var generator = new CodeGenerator();
+                        var result = generator.Generate(expression);
 
                         Console.WriteLine(result());
                     }
