@@ -141,31 +141,34 @@ namespace ExpressionEvaluator.LexicalAnalysis
                     switch (c)
                     {
                         case '+':
-                            return new TokenInfo(TokenKind.Plus, line, column, 1);
+                            return new TokenInfo(TokenKind.Plus, line, column, 1, "+");
 
                         case '-':
-                            return new TokenInfo(TokenKind.Minus, line, column, 1);
+                            return new TokenInfo(TokenKind.Minus, line, column, 1, "-");
 
                         case '*':
-                            return new TokenInfo(TokenKind.Star, line, column, 1);
+                            return new TokenInfo(TokenKind.Star, line, column, 1, "*");
 
                         case '/':
-                            return new TokenInfo(TokenKind.Slash, line, column, 1);
+                            return new TokenInfo(TokenKind.Slash, line, column, 1, "/");
 
                         case '%':
-                            return new TokenInfo(TokenKind.Percent, line, column, 1);
+                            return new TokenInfo(TokenKind.Percent, line, column, 1, "%");
 
                         case '=':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.Equal, line, column, 1);
+                                return new TokenInfo(TokenKind.Equal, line, column, 1, "==");
                             }
-                            return new TokenInfo(TokenKind.Assign, line, column, 1);
+                            return new TokenInfo(TokenKind.Assign, line, column, 1, "=");
 
                         case '^':
-                            return new TokenInfo(TokenKind.Caret, line, column, 1, ".");
+                            return new TokenInfo(TokenKind.Caret, line, column, 1, "^");
+
+                        case ',':
+                            return new TokenInfo(TokenKind.Comma, line, column, 1, ",");
 
                         case '.':
                             return new TokenInfo(TokenKind.Period, line, column, 1, ".");
@@ -183,7 +186,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             c2 = ReadChar();
                             if (c2 == '&')
                             {
-                                return new TokenInfo(TokenKind.And, line, column, 1);
+                                return new TokenInfo(TokenKind.And, line, column, 1, "&&");
                             }
                             goto default;
 
@@ -191,7 +194,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             c2 = ReadChar();
                             if (c2 == '|')
                             {
-                                return new TokenInfo(TokenKind.Or, line, column, 1);
+                                return new TokenInfo(TokenKind.Or, line, column, 1, "||");
                             }
                             goto default;
 
@@ -200,24 +203,24 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.OpenAngleBracket, line, column, 1);
+                                return new TokenInfo(TokenKind.OpenAngleBracket, line, column, 1, "<=");
                             }
-                            return new TokenInfo(TokenKind.Less, line, column, 1);
+                            return new TokenInfo(TokenKind.Less, line, column, 1, "<");
 
                         case '>':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.GreaterOrEqual, line, column, 1);
+                                return new TokenInfo(TokenKind.GreaterOrEqual, line, column, 1, ">=");
                             }
-                            return new TokenInfo(TokenKind.CloseAngleBracket, line, column, 1);
+                            return new TokenInfo(TokenKind.CloseAngleBracket, line, column, 1, ">");
 
                         case '(':
-                            return new TokenInfo(TokenKind.OpenParen, line, column, 1);
+                            return new TokenInfo(TokenKind.OpenParen, line, column, 1, "(");
 
                         case ')':
-                            return new TokenInfo(TokenKind.CloseParen, line, column, 1);
+                            return new TokenInfo(TokenKind.CloseParen, line, column, 1, ")");
 
                         case ' ':
                             break;

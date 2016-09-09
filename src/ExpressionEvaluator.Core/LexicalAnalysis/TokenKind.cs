@@ -29,6 +29,7 @@
         And,
         Percent,
         NotKeyword,
-        Period
+        Period,
+        Comma
     }
 }

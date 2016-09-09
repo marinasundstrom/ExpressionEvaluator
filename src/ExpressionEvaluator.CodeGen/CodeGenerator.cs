@@ -58,7 +58,7 @@ namespace ExpressionEvaluator.CodeGen
                     var parenthesis = expression as ParenthesisExpression;
                     if (parenthesis != null)
                     {
-                        Evaluator.EvaluateExpression(parenthesis.Expression);
+                        VisitExpression(parenthesis.Expression);
                     }
                     else
                     {

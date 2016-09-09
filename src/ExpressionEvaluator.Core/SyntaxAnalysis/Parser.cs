@@ -253,7 +253,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
                 case TokenKind.OpenParen:
                     expr = ParseExpression();
-                    if (Eat(TokenKind.CloseParen, out token2))
+                    if (!Eat(TokenKind.CloseParen, out token2))
                     {
                         Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token.GetSpan());
                     }
