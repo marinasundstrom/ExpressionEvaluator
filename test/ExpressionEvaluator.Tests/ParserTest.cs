@@ -203,8 +203,8 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(Test2))]
         public void Test2()
         {
-            var source = @"
-let x = 2
+            var source = 
+@"let x = 2
 if x > 2 then
     x
 end

@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionEvaluator.Core", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionEvaluator.CodeGen", "src\ExpressionEvaluator.CodeGen\ExpressionEvaluator.CodeGen.csproj", "{D669777F-0CEC-4358-B276-3FB08638BE0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionEvaluator.Test", "test\ExpressionEvaluator.Test\ExpressionEvaluator.Test.csproj", "{7E8736F0-9E80-4512-A290-B4282479DE8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,14 @@ Global
 		{D669777F-0CEC-4358-B276-3FB08638BE0D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D669777F-0CEC-4358-B276-3FB08638BE0D}.Release|x86.ActiveCfg = Release|Any CPU
 		{D669777F-0CEC-4358-B276-3FB08638BE0D}.Release|x86.Build.0 = Release|Any CPU
+		{7E8736F0-9E80-4512-A290-B4282479DE8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8736F0-9E80-4512-A290-B4282479DE8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E8736F0-9E80-4512-A290-B4282479DE8A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7E8736F0-9E80-4512-A290-B4282479DE8A}.Debug|x86.Build.0 = Debug|Any CPU
+		{7E8736F0-9E80-4512-A290-B4282479DE8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E8736F0-9E80-4512-A290-B4282479DE8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E8736F0-9E80-4512-A290-B4282479DE8A}.Release|x86.ActiveCfg = Release|Any CPU
+		{7E8736F0-9E80-4512-A290-B4282479DE8A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,5 +76,6 @@ Global
 		{B65110B9-82C3-487D-BBC7-65E136345786} = {6A922535-E24E-4146-ABD1-2FD47B324312}
 		{CB0F2158-DC85-48FE-8BB9-8B41E76A4503} = {E542F666-D743-4B78-B907-B13140B92B6D}
 		{D669777F-0CEC-4358-B276-3FB08638BE0D} = {E542F666-D743-4B78-B907-B13140B92B6D}
+		{7E8736F0-9E80-4512-A290-B4282479DE8A} = {6A922535-E24E-4146-ABD1-2FD47B324312}
 	EndGlobalSection
 EndGlobal

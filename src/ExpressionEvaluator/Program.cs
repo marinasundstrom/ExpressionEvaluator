@@ -17,9 +17,9 @@ namespace ExpressionEvaluator
 
                 var line = Console.ReadLine();
 
-                using (var input = StringHelpers.TextReaderFromString(line))
+                using (var reader = StringHelpers.TextReaderFromString(line))
                 {
-                    var lexer = new Lexer(input);
+                    var lexer = new Lexer(reader);
                     var parser = new Parser(lexer);
                     var expression = parser.ParseExpression();
 
