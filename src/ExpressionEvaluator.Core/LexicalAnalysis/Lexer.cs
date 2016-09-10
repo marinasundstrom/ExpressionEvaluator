@@ -181,6 +181,12 @@ namespace ExpressionEvaluator.LexicalAnalysis
                         case '.':
                             return new TokenInfo(TokenKind.Period, line, column, 1, ".");
 
+                        case ';':
+                            return new TokenInfo(TokenKind.Semicolon, line, column, 1, ";");
+
+                        case ':':
+                            return new TokenInfo(TokenKind.Colon, line, column, 1, ":");
+
                         case '!':
                             c2 = PeekChar();
                             if (c2 == '=')

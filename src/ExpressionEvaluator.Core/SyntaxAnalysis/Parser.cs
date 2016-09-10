@@ -248,6 +248,10 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     expr = ParseIfExpression();
                     break;
 
+                case TokenKind.LetKeyword:
+                    expr = ParseLetExpression();
+                    break;
+
                 case TokenKind.Number:
                     ReadToken();
                     if (MaybeEat(TokenKind.Period, out token2))
@@ -295,6 +299,29 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             }
 
             return expr;
+        }
+
+        private Expression ParseLetExpression()
+        {
+            var letKeyword = ReadToken();
+            TokenInfo nameToken;
+            TokenInfo assignToken;
+            Expression assignedExpression = null;
+            if (!Eat(TokenKind.Identifier, out nameToken))
+            {
+                Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, nameToken.GetSpan());
+            }
+            if (!Eat(TokenKind.Assign, out assignToken))
+            {
+                Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, assignToken.GetSpan());
+            }
+            TokenInfo token = PeekToken();
+            assignedExpression = ParseExpression();
+            if(assignedExpression == null)
+            {
+                Diagnostics.AddError(Strings.Error_ExpectedExpression, token.GetSpan());
+            }
+            return new LetExpression(letKeyword, nameToken, assignToken, assignedExpression);
         }
 
         private Expression ParseIfExpression()

@@ -93,5 +93,36 @@ namespace ExpressionEvaluator.Tests
                 var expr = parser.ParseExpression() as IfThenExpression;
             }
         }
+
+        [Fact(DisplayName = nameof(LetExpression))]
+        public void LetExpression()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("let x = 2 > 3"))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                var expr = parser.ParseExpression() as LetExpression;
+            }
+        }
+
+        [Fact(DisplayName = nameof(Test))]
+        public void Test()
+        {
+            var source = @"
+let x = 2
+if x > 2 then
+    x
+end
+";
+            using (var reader = StringHelpers.TextReaderFromString(source))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                var expr = parser.ParseExpression();
+                var exp2 = parser.ParseExpression();
+            }
+        }
     }
 }

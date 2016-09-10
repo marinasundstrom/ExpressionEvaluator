@@ -31,6 +31,8 @@
         NotKeyword,
         Period,
         Comma,
+        Colon,
+        Semicolon,
 
         IfKeyword,
         ThenKeyword,
@@ -41,6 +43,7 @@
         DoKeyword,
         EndKeyword,
         TrueKeyword,
-        FalseKeyword
+        FalseKeyword,
+        LetKeyword
     }
 }
