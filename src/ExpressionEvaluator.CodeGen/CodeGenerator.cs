@@ -19,14 +19,14 @@ namespace ExpressionEvaluator.CodeGen
             var method = new DynamicMethod("Function", typeof(double), new Type[0]);
             gen = method.GetILGenerator();
 
-            VisitExpression(expression);
+            ((ITreeVisitor)this).VisitExpression(expression);
 
             gen.Emit(OpCodes.Ret);
 
             return (Func<double>)method.CreateDelegate(typeof(Func<double>));
         }
 
-        public void VisitExpression(Expression expression)
+        void ITreeVisitor.VisitExpression(Expression expression)
         {
             var identifier = expression as IdentifierExpression;
             if (identifier != null)
@@ -58,15 +58,15 @@ namespace ExpressionEvaluator.CodeGen
                     var parenthesis = expression as ParenthesisExpression;
                     if (parenthesis != null)
                     {
-                        VisitExpression(parenthesis.Expression);
+                        ((ITreeVisitor)this).VisitExpression(parenthesis.Expression);
                     }
                     else
                     {
                         var binaryExpression = expression as BinaryExpression;
                         if (binaryExpression != null)
                         {
-                            VisitExpression(binaryExpression.Left);
-                            VisitExpression(binaryExpression.Right);
+                            ((ITreeVisitor)this).VisitExpression(binaryExpression.Left);
+                            ((ITreeVisitor)this).VisitExpression(binaryExpression.Right);
 
                             var operation = ResolveOperation(binaryExpression);
 
@@ -103,7 +103,7 @@ namespace ExpressionEvaluator.CodeGen
                             var unaryExpression = expression as UnaryExpression;
                             if (unaryExpression != null)
                             {
-                                VisitExpression(unaryExpression.Expression);
+                                ((ITreeVisitor)this).VisitExpression(unaryExpression.Expression);
 
                                 var operation = ResolveOperation(unaryExpression);
 
