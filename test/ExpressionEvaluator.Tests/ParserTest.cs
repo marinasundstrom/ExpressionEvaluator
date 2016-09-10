@@ -9,6 +9,86 @@ namespace ExpressionEvaluator.Tests
 {
 	public class ParserTest
 	{
+        [Fact(DisplayName = nameof(MaybeEat_Success))]
+        public void MaybeEat_Success()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("42"))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                TokenInfo token, token2;
+
+                var result = parser.MaybeEat(TokenKind.Number, out token);
+
+                Assert.True(result);
+
+                token2 = parser.PeekToken();
+
+                Assert.NotEqual(token2.Kind, token.Kind);
+            }
+        }
+
+        [Fact(DisplayName = nameof(MaybeEat_Fail))]
+        public void MaybeEat_Fail()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("42"))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                TokenInfo token, token2;
+
+                var result = parser.MaybeEat(TokenKind.Identifier, out token);
+
+                Assert.False(result);
+
+                token2 = parser.PeekToken();
+
+                Assert.Equal(token2.Kind, token.Kind);
+            }
+        }
+
+        [Fact(DisplayName = nameof(Eat_Success))]
+        public void Eat_Success()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("42"))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                TokenInfo token, token2;
+
+                var result = parser.Eat(TokenKind.Number, out token);
+
+                Assert.True(result);
+
+                token2 = parser.PeekToken();
+
+                Assert.NotEqual(token2.Kind, token.Kind);
+            }
+        }
+
+        [Fact(DisplayName = nameof(Eat_Fail))]
+        public void Eat_Fail()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("42"))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                TokenInfo token, token2;
+
+                var result = parser.Eat(TokenKind.Identifier, out token);
+
+                Assert.False(result);
+
+                token2 = parser.PeekToken();
+
+                Assert.NotEqual(token2.Kind, token.Kind);
+            }
+        }
+
         [Fact(DisplayName = nameof(IntNumberExpression))]
         public void IntNumberExpression()
 		{
@@ -108,6 +188,20 @@ namespace ExpressionEvaluator.Tests
 
         [Fact(DisplayName = nameof(Test))]
         public void Test()
+        {
+            var source = @"let x = (if true then 1 else 0)";
+
+            using (var reader = StringHelpers.TextReaderFromString(source))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                var expr = parser.ParseExpression();
+            }
+        }
+
+        [Fact(DisplayName = nameof(Test2))]
+        public void Test2()
         {
             var source = @"
 let x = 2

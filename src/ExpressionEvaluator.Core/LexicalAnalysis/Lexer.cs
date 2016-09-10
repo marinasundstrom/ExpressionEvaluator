@@ -1,6 +1,5 @@
 ﻿using ExpressionEvaluator.Diagnostics;
 using ExpressionEvaluator.Properties;
-using ExpressionEvaluator.Utilities;
 using System;
 using System.IO;
 using System.Linq;

@@ -111,7 +111,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         /// Parse an expression (Internal)
         /// </summary>
         /// <returns>An expression.</returns>
-        /// <param name="precedence">The current level of precendence.</param>
+        /// <param name="precedence">The current level of precedence.</param>
         private Expression ParseExpressionCore(int precedence)
         {
             var expr = ParseFactorExpression();
@@ -223,7 +223,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         {
             Expression expr = null;
 
-            TokenInfo token, token2, token3;
+            TokenInfo token;
 
             token = PeekToken();
 
@@ -344,11 +344,12 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private Expression ParseIfExpression()
         {
-            TokenInfo token, token2;
+            TokenInfo token, token2, token3;
             token = ReadToken();
             var condition = ParseExpression();
             TokenInfo thenKeyword, endKeyword;
             Expression body = null;
+            Expression elseBody = null;
             if (!Eat(TokenKind.ThenKeyword, out thenKeyword))
             {
                 Diagnostics.AddError(string.Format(Strings.Error_ExpectedKeyword, "then"), thenKeyword.GetSpan());
@@ -356,10 +357,22 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             if (!MaybeEat(TokenKind.EndKeyword, out token2))
             {
                 body = ParseExpression();
+                if(body == null)
+                {
+                    Diagnostics.AddError(Strings.Error_ExpectedExpression, token2.GetSpan());
+                }
             }
             else
             {
                 Diagnostics.AddError(Strings.Error_ExpectedExpression, token2.GetSpan());
+            }
+            if (MaybeEat(TokenKind.ElseKeyword, out token3))
+            {
+                elseBody = ParseExpression();
+                if (elseBody == null)
+                {
+                    Diagnostics.AddError(Strings.Error_ExpectedExpression, token3.GetSpan());
+                }
             }
             MaybeEat(TokenKind.EndKeyword, out endKeyword);
             return new IfThenExpression(token, condition, thenKeyword, body, endKeyword);
@@ -367,23 +380,23 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         #region Lexer helpers
 
-        private TokenInfo PeekToken()
+        internal TokenInfo PeekToken()
         {
             return Lexer.PeekToken();
         }
 
-        private TokenInfo ReadToken()
+        internal TokenInfo ReadToken()
         {
             return Lexer.ReadToken();
         }
 
-        private bool MaybeEat(TokenKind kind)
+        internal bool MaybeEat(TokenKind kind)
         {
             TokenInfo tokenInfo;
             return MaybeEat(kind, out tokenInfo);
         }
 
-        private bool MaybeEat(TokenKind kind, out TokenInfo tokenInfo)
+        internal bool MaybeEat(TokenKind kind, out TokenInfo tokenInfo)
         {
             tokenInfo = PeekToken();
             if (tokenInfo.Kind == kind)
@@ -394,13 +407,13 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             return false;
         }
 
-        private bool Eat(TokenKind kind)
+        internal bool Eat(TokenKind kind)
         {
             TokenInfo tokenInfo;
             return Eat(kind, out tokenInfo);
         }
 
-        private bool Eat(TokenKind kind, out TokenInfo tokenInfo)
+        internal bool Eat(TokenKind kind, out TokenInfo tokenInfo)
         {
             tokenInfo = ReadToken();
             if (tokenInfo.Kind == kind)
@@ -410,7 +423,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             return false;
         }
 
-        private bool IsEol
+        internal bool IsEol
         {
             get
             {
