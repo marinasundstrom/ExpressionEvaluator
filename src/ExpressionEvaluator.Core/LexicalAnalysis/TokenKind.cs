@@ -30,6 +30,15 @@
         Percent,
         NotKeyword,
         Period,
-        Comma
+        Comma,
+
+        IfKeyword,
+        ThenKeyword,
+        ElseKeyword,
+        ForKeyword,
+        EachKeyword,
+        WhileKeyword,
+        DoKeyword,
+        EndKeyword
     }
 }

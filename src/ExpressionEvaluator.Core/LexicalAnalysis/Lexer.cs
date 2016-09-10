@@ -1,7 +1,9 @@
 ﻿using ExpressionEvaluator.Diagnostics;
 using ExpressionEvaluator.Properties;
+using ExpressionEvaluator.Utilities;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ExpressionEvaluator.LexicalAnalysis
@@ -104,7 +106,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
 
                 var c = PeekChar();
 
-                /* if (char.IsLetter(c))
+                if (char.IsLetter(c))
                 {
                     var stringBuilder = new StringBuilder();
                     do
@@ -116,9 +118,15 @@ namespace ExpressionEvaluator.LexicalAnalysis
                         c = PeekChar();
                     } while (char.IsLetterOrDigit(c));
 
-                    return new TokenInfo(TokenKind.Identifier, line, column, stringBuilder.Length, stringBuilder.ToString());
+                    var str = stringBuilder.ToString();
+                    if(Enum.TryParse<TokenKind>(string.Format($"{str.Capitalize()}Keyword"), false, out var result))
+                    {
+                        return new TokenInfo(result, line, column, str.Length, str);
+                    }
+
+                    return new TokenInfo(TokenKind.Identifier, line, column, str.Length, str);
                 }
-                else */ if (char.IsDigit(c))
+                else if (char.IsDigit(c))
                 {
                     var stringBuilder = new StringBuilder();
                     do

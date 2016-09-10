@@ -48,6 +48,7 @@
     <Compile Include="LexicalAnalysis\TokenInfoExtensions.cs" />
     <Compile Include="LexicalAnalysis\TokenKind.cs" />
     <Compile Include="LexicalAnalysis\Lexer.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\StringHelpers.cs" />
     <Compile Include="SyntaxAnalysis\Parser.cs" />
     <Compile Include="SyntaxAnalysis\Ast\Expression.cs" />

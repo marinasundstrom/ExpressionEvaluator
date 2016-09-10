@@ -209,5 +209,21 @@ namespace ExpressionEvaluator.Tests
                 Assert.Equal(expectedValueString, token.Value);
             }
         }
+
+        [Fact(DisplayName = nameof(ReadToken_IfKeyword))]
+        public void ReadToken_IfKeyword()
+        {
+            TokenKind expectedValueKind = TokenKind.IfKeyword;
+            string expectedValueString = "if";
+
+            using (var reader = StringHelpers.TextReaderFromString(expectedValueString))
+            {
+                var lexer = new Lexer(reader);
+                var token = lexer.ReadTokenCore();
+
+                Assert.Equal(expectedValueKind, token.Kind);
+                Assert.Equal(expectedValueString, token.Value);
+            }
+        }
     }
 }
