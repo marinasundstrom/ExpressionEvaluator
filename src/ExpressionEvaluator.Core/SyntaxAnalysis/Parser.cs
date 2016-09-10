@@ -271,10 +271,10 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private Expression ParseParenthesisExpression()
         {
-            TokenInfo token = TokenInfo.Empty, token2;
+            TokenInfo token, token2;
             Expression expr = null;
 
-            ReadToken();
+            token = ReadToken();
             token2 = PeekToken();
             if (!MaybeEat(TokenKind.CloseParen, out token2))
             {
@@ -296,10 +296,10 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private Expression ParseNumberExpression()
         {
-            TokenInfo token = TokenInfo.Empty, token2, token3;
+            TokenInfo token, token2, token3;
             Expression expr = null;
 
-            ReadToken();
+            token = ReadToken();
             if (MaybeEat(TokenKind.Period, out token2))
             {
                 if (MaybeEat(TokenKind.Number, out token3))

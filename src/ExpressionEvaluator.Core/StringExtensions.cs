@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpressionEvaluator.Utilities
+namespace ExpressionEvaluator
 {
     public static class StringExtensions
     {
