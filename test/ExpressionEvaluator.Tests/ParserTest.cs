@@ -54,7 +54,7 @@ namespace ExpressionEvaluator.Tests
                 Assert.True(expr is RealNumberExpression);
                 Assert.NotEqual(TokenInfo.Empty, expr.Number);
                 Assert.NotEqual(TokenInfo.Empty, expr.Separator);
-                Assert.NotEqual(TokenInfo.Empty, expr.Decimal);
+                Assert.NotEqual(TokenInfo.Empty, expr.Fraction);
                 Assert.Equal(4.2, expr.Value);
             }
         }
