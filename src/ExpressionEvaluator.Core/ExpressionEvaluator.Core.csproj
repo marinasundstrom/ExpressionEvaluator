@@ -31,6 +31,7 @@
     <Compile Include="SyntaxAnalysis\Ast\BooleanLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\FalseLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\IfThenExpression.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\Parameter.cs" />
     <Compile Include="SyntaxAnalysis\ITreeVisitor.cs" />
     <Compile Include="Diagnostics\Diagnostic.cs" />
     <Compile Include="Diagnostics\DiagnosticsBag.cs" />

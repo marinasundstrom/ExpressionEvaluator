@@ -12,10 +12,12 @@ namespace ExpressionEvaluator.Test
         public static void Main(string[] args)
         {
             var input =
-@"let x = 2
-if x > 2 then
-    x
-end
+@"let f a b = 
+    if a > 2 then
+        b
+    else
+        a
+    end
 ";
             using (var reader = StringHelpers.TextReaderFromString(input))
             {

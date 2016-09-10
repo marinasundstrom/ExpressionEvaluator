@@ -1,4 +1,5 @@
 ﻿using ExpressionEvaluator.LexicalAnalysis;
+using System.Collections.Generic;
 
 namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
@@ -10,6 +11,8 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
             Name = name;
             Assign = assign;
             AssignedExpression = assignedExpression;
+
+            Parameters = new List<Parameter>();
         }
 
         public Expression AssignedExpression { get; }
@@ -19,5 +22,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
         public TokenInfo LetKeyword { get; }
 
         public TokenInfo Name { get; }
+
+        public List<Parameter> Parameters { get; }
     }
 }

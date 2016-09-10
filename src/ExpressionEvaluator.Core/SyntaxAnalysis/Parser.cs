@@ -3,6 +3,9 @@ using ExpressionEvaluator.LexicalAnalysis;
 using ExpressionEvaluator.Properties;
 using ExpressionEvaluator.SyntaxAnalysis.AST;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace ExpressionEvaluator.SyntaxAnalysis
 {
     /// <summary>
@@ -245,7 +248,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     break;
 
                 case TokenKind.IfKeyword:
-                    expr = ParseIfExpression();
+                    expr = ParseIfThenElseExpression();
                     break;
 
                 case TokenKind.LetKeyword:
@@ -322,27 +325,47 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         private Expression ParseLetExpression()
         {
             var letKeyword = ReadToken();
-            TokenInfo nameToken;
-            TokenInfo assignToken;
+            TokenInfo nameToken, assignToken;
+
+            List<Parameter> parameters = new List<Parameter>();
+            
             Expression assignedExpression = null;
             if (!Eat(TokenKind.Identifier, out nameToken))
             {
                 Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, nameToken.GetSpan());
             }
+            TokenInfo token = PeekToken();
+            if(token.Kind != TokenKind.Assign && token.Kind == TokenKind.Identifier)
+            {
+                while(MaybeEat(TokenKind.Identifier, out token))
+                {
+                    parameters.Add(new Parameter(token));
+                }
+            }
+            else
+            {
+                ReadToken();
+                Diagnostics.AddError(Strings.Error_ExpectedToken, token.GetSpan());
+            }
             if (!Eat(TokenKind.Assign, out assignToken))
             {
                 Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, assignToken.GetSpan());
             }
-            TokenInfo token = PeekToken();
+            token = PeekToken();
             assignedExpression = ParseExpression();
             if(assignedExpression == null)
             {
                 Diagnostics.AddError(Strings.Error_ExpectedExpression, token.GetSpan());
             }
-            return new LetExpression(letKeyword, nameToken, assignToken, assignedExpression);
+            var expr = new LetExpression(letKeyword, nameToken, assignToken, assignedExpression);
+            if(parameters.Any())
+            {
+                expr.Parameters.AddRange(parameters);
+            }
+            return expr;
         }
 
-        private Expression ParseIfExpression()
+        private Expression ParseIfThenElseExpression()
         {
             TokenInfo token, token2, token3;
             token = ReadToken();
@@ -375,7 +398,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                 }
             }
             MaybeEat(TokenKind.EndKeyword, out endKeyword);
-            return new IfThenExpression(token, condition, thenKeyword, body, endKeyword);
+            return new IfThenExpression(token, condition, thenKeyword, body, token3, elseBody, endKeyword);
         }
 
         #region Lexer helpers
