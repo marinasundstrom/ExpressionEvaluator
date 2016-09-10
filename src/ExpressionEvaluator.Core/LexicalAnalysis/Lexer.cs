@@ -104,7 +104,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
 
                 var c = PeekChar();
 
-                if (char.IsLetter(c))
+                /* if (char.IsLetter(c))
                 {
                     var stringBuilder = new StringBuilder();
                     do
@@ -118,7 +118,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
 
                     return new TokenInfo(TokenKind.Identifier, line, column, stringBuilder.Length, stringBuilder.ToString());
                 }
-                else if (char.IsDigit(c))
+                else */ if (char.IsDigit(c))
                 {
                     var stringBuilder = new StringBuilder();
                     do
