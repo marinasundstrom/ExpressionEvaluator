@@ -45,7 +45,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
         }
 
         /// <summary>
-        /// Peeks a token.
+        /// Peek a token.
         /// </summary>
         /// <returns>The token.</returns>
         public TokenInfo PeekToken()
@@ -67,7 +67,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
         }
 
         /// <summary>
-        /// Reads a token.
+        /// Read a token.
         /// </summary>
         /// <returns>The token.</returns>
         public TokenInfo ReadToken()
@@ -91,6 +91,16 @@ namespace ExpressionEvaluator.LexicalAnalysis
             {
                 return PeekToken().Kind == TokenKind.EndOfFile;
             }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="T:ExpressionEvaluator.Lexer"/> has reached EOL.
+        /// </summary>
+        /// <value><c>true</c> if is EOL; otherwise, <c>false</c>.</value>
+        public bool IsEol
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -276,7 +286,16 @@ namespace ExpressionEvaluator.LexicalAnalysis
 
         private char PeekChar()
         {
-            return (char)TextReader.Peek();
+            var ch = (char)TextReader.Peek();
+            if(ch == '\n' || ch == '\r')
+            {
+                IsEol = true;
+            }
+            else
+            {
+                IsEol = false;
+            }
+            return ch;
         }
 
         /// <summary>

@@ -92,6 +92,55 @@ namespace ExpressionEvaluator.Tests
             }
         }
 
+        [Fact(DisplayName = nameof(ReadPeekToken_Newline))]
+        public void ReadPeekToken_Newline()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("42\r\n64 hej\r\n"))
+            {
+                var lexer = new Lexer(reader);
+
+                Assert.False(lexer.IsEol);
+
+                var token1 = lexer.PeekToken();
+                var token2 = lexer.ReadToken();
+
+                Assert.True(lexer.IsEol);
+
+                var token3 = lexer.PeekToken();
+                var token4 = lexer.ReadToken();
+
+                Assert.False(lexer.IsEol);
+
+                var token5 = lexer.PeekToken();
+                var token6 = lexer.ReadToken();
+
+                Assert.True(lexer.IsEol);
+            }
+        }
+
+        [Fact(DisplayName = nameof(ReadToken_Newline))]
+        public void ReadToken_Newline()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("42\r\n64 hej\r\n"))
+            {
+                var lexer = new Lexer(reader);
+
+                Assert.False(lexer.IsEol);
+
+                var token2 = lexer.ReadToken();
+
+                Assert.True(lexer.IsEol);
+
+                var token4 = lexer.ReadToken();
+
+                Assert.False(lexer.IsEol);
+
+                var token6 = lexer.ReadToken();
+
+                Assert.True(lexer.IsEol);
+            }
+        }
+
         [Fact(DisplayName = nameof(ReadToken_Number_OneDigit))]
         public void ReadToken_Number_OneDigit()
         {

@@ -392,6 +392,14 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             return false;
         }
 
+        private bool IsEol
+        {
+            get
+            {
+                return Lexer.IsEol;
+            }
+        }
+
         #endregion
     }
 }
