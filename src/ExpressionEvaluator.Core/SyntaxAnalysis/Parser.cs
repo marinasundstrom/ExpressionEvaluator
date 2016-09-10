@@ -253,49 +253,67 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     break;
 
                 case TokenKind.Number:
-                    ReadToken();
-                    if (MaybeEat(TokenKind.Period, out token2))
-                    {
-                        if (MaybeEat(TokenKind.Number, out token3))
-                        {
-                            expr = new RealNumberExpression(token, token2, token3);
-                        }
-                        else
-                        {
-                            Diagnostics.AddError(string.Format(Strings.Error_UnexpectedToken, token3.Value), token3.GetSpan());
-                        }
-                    }
-                    else
-                    {
-                        expr = new IntegerNumberExpression(token);
-                    }
+                    expr = ParseNumberExpression();
                     break;
 
                 case TokenKind.OpenParen:
-                    ReadToken();
-                    token2 = PeekToken();
-                    if (!MaybeEat(TokenKind.CloseParen, out token2))
-                    {
-                        expr = ParseExpression();
-                    }
-                    if (expr == null)
-                    {
-                        Diagnostics.AddError(string.Format(Strings.Error_InvalidExpressionTerm, token2.Value), token2.GetSpan());
-                    }
-                    else
-                    {
-                        if (!Eat(TokenKind.CloseParen, out token2))
-                        {
-                            Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token2.GetSpan());
-                        }
-                    }
-                    expr = new ParenthesisExpression(token, expr, token2);
+                    expr = ParseParenthesisExpression();
                     break;
 
                 case TokenKind.EndOfFile:
                     ReadToken();
                     Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, token.GetSpan());
                     break;
+            }
+
+            return expr;
+        }
+
+        private Expression ParseParenthesisExpression()
+        {
+            TokenInfo token = TokenInfo.Empty, token2;
+            Expression expr = null;
+
+            ReadToken();
+            token2 = PeekToken();
+            if (!MaybeEat(TokenKind.CloseParen, out token2))
+            {
+                expr = ParseExpression();
+            }
+            if (expr == null)
+            {
+                Diagnostics.AddError(string.Format(Strings.Error_InvalidExpressionTerm, token2.Value), token2.GetSpan());
+            }
+            else
+            {
+                if (!Eat(TokenKind.CloseParen, out token2))
+                {
+                    Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token2.GetSpan());
+                }
+            }
+            return new ParenthesisExpression(token, expr, token2);
+        }
+
+        private Expression ParseNumberExpression()
+        {
+            TokenInfo token = TokenInfo.Empty, token2, token3;
+            Expression expr = null;
+
+            ReadToken();
+            if (MaybeEat(TokenKind.Period, out token2))
+            {
+                if (MaybeEat(TokenKind.Number, out token3))
+                {
+                    expr = new RealNumberExpression(token, token2, token3);
+                }
+                else
+                {
+                    Diagnostics.AddError(string.Format(Strings.Error_UnexpectedToken, token3.Value), token3.GetSpan());
+                }
+            }
+            else
+            {
+                expr = new IntegerNumberExpression(token);
             }
 
             return expr;
