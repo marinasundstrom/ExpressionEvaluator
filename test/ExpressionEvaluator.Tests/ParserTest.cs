@@ -81,5 +81,17 @@ namespace ExpressionEvaluator.Tests
         {
             
         }
+
+        [Fact(DisplayName = nameof(IfExpression))]
+        public void IfExpression()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("if x > 2 then 2 end"))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                var expr = parser.ParseExpression() as IfThenExpression;
+            }
+        }
     }
 }

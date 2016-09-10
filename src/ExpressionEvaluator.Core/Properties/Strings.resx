@@ -117,19 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Error_ExpectedExpression" xml:space="preserve">
+    <value>Expected expression</value>
+  </data>
+  <data name="Error_ExpectedKeyword" xml:space="preserve">
+    <value>Expected keyword '{0}'</value>
+  </data>
   <data name="Error_ExpectedToken" xml:space="preserve">
-    <value>Expected '{0}'.</value>
+    <value>Expected '{0}'</value>
   </data>
   <data name="Error_InvalidExpressionTerm" xml:space="preserve">
-    <value>Invalid expression term '{0}'.</value>
+    <value>Invalid expression term '{0}'</value>
   </data>
   <data name="Error_InvalidToken" xml:space="preserve">
-    <value>Invalid token '{0}'.</value>
+    <value>Invalid token '{0}'</value>
   </data>
   <data name="Error_UnexpectedEndOfFile" xml:space="preserve">
-    <value>Unexpected end-of-file.</value>
+    <value>Unexpected end-of-file</value>
   </data>
   <data name="Error_UnexpectedToken" xml:space="preserve">
-    <value>Unexpected token.</value>
+    <value>Unexpected token</value>
   </data>
 </root>

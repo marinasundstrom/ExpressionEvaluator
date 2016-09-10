@@ -95,6 +95,8 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     case TokenKind.GreaterOrEqual:
                     case TokenKind.Less:
                     case TokenKind.OpenAngleBracket:
+                    case TokenKind.Equal:
+                    case TokenKind.NotEquals:
                         ReadToken();
                         break;
                     default:
@@ -223,15 +225,31 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
             TokenInfo token, token2, token3;
 
-            token = ReadToken();
+            token = PeekToken();
 
             switch (token.Kind)
             {
                 case TokenKind.Identifier:
+                    ReadToken();
                     expr = new IdentifierExpression(token);
                     break;
 
+                case TokenKind.TrueKeyword:
+                    ReadToken();
+                    expr = new TrueLiteralExpression(token);
+                    break;
+
+                case TokenKind.FalseKeyword:
+                    ReadToken();
+                    expr = new FalseLiteralExpression(token);
+                    break;
+
+                case TokenKind.IfKeyword:
+                    expr = ParseIfExpression();
+                    break;
+
                 case TokenKind.Number:
+                    ReadToken();
                     if (MaybeEat(TokenKind.Period, out token2))
                     {
                         if (MaybeEat(TokenKind.Number, out token3))
@@ -250,6 +268,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     break;
 
                 case TokenKind.OpenParen:
+                    ReadToken();
                     token2 = PeekToken();
                     if (!MaybeEat(TokenKind.CloseParen, out token2))
                     {
@@ -270,11 +289,35 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     break;
 
                 case TokenKind.EndOfFile:
+                    ReadToken();
                     Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, token.GetSpan());
                     break;
             }
 
             return expr;
+        }
+
+        private Expression ParseIfExpression()
+        {
+            TokenInfo token, token2;
+            token = ReadToken();
+            var condition = ParseExpression();
+            TokenInfo thenKeyword, endKeyword;
+            Expression body = null;
+            if (!Eat(TokenKind.ThenKeyword, out thenKeyword))
+            {
+                Diagnostics.AddError(string.Format(Strings.Error_ExpectedKeyword, "then"), thenKeyword.GetSpan());
+            }
+            if (!MaybeEat(TokenKind.EndKeyword, out token2))
+            {
+                body = ParseExpression();
+            }
+            else
+            {
+                Diagnostics.AddError(Strings.Error_ExpectedExpression, token2.GetSpan());
+            }
+            MaybeEat(TokenKind.EndKeyword, out endKeyword);
+            return new IfThenExpression(token, condition, thenKeyword, body, endKeyword);
         }
 
         #region Lexer helpers

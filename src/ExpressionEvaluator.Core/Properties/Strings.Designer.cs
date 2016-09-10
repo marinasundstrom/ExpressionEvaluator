@@ -62,7 +62,25 @@ namespace ExpressionEvaluator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Expected expression.
+        /// </summary>
+        internal static string Error_ExpectedExpression {
+            get {
+                return ResourceManager.GetString("Error_ExpectedExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected keyword &apos;{0}&apos;.
+        /// </summary>
+        internal static string Error_ExpectedKeyword {
+            get {
+                return ResourceManager.GetString("Error_ExpectedKeyword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected &apos;{0}&apos;.
         /// </summary>
         internal static string Error_ExpectedToken {
             get {
@@ -71,7 +89,7 @@ namespace ExpressionEvaluator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid expression term &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Invalid expression term &apos;{0}&apos;.
         /// </summary>
         internal static string Error_InvalidExpressionTerm {
             get {
@@ -80,7 +98,7 @@ namespace ExpressionEvaluator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid token &apos;{0}&apos;..
+        ///   Looks up a localized string similar to Invalid token &apos;{0}&apos;.
         /// </summary>
         internal static string Error_InvalidToken {
             get {
@@ -89,7 +107,7 @@ namespace ExpressionEvaluator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unexpected end-of-file..
+        ///   Looks up a localized string similar to Unexpected end-of-file.
         /// </summary>
         internal static string Error_UnexpectedEndOfFile {
             get {
@@ -98,7 +116,7 @@ namespace ExpressionEvaluator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unexpected token..
+        ///   Looks up a localized string similar to Unexpected token.
         /// </summary>
         internal static string Error_UnexpectedToken {
             get {

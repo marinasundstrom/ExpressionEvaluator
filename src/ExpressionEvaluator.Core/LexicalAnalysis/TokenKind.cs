@@ -39,6 +39,8 @@
         EachKeyword,
         WhileKeyword,
         DoKeyword,
-        EndKeyword
+        EndKeyword,
+        TrueKeyword,
+        FalseKeyword
     }
 }

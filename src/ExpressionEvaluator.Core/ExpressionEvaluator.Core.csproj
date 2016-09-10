@@ -28,6 +28,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SyntaxAnalysis\Ast\BooleanLiteralExpression.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\FalseLiteralExpression.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\IfThenExpression.cs" />
     <Compile Include="SyntaxAnalysis\ITreeVisitor.cs" />
     <Compile Include="Diagnostics\Diagnostic.cs" />
     <Compile Include="Diagnostics\DiagnosticsBag.cs" />
@@ -48,6 +51,7 @@
     <Compile Include="LexicalAnalysis\TokenInfoExtensions.cs" />
     <Compile Include="LexicalAnalysis\TokenKind.cs" />
     <Compile Include="LexicalAnalysis\Lexer.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\TrueLiteralExpression.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\StringHelpers.cs" />
     <Compile Include="SyntaxAnalysis\Parser.cs" />
