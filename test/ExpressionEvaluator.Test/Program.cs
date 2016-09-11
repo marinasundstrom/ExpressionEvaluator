@@ -1,5 +1,6 @@
 ﻿using ExpressionEvaluator.CodeGen;
 using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.SemanticAnalysis;
 using ExpressionEvaluator.SyntaxAnalysis;
 using ExpressionEvaluator.Utilites;
 using System;
@@ -16,7 +17,7 @@ namespace ExpressionEvaluator.Test
     if a > 2 then
         b
     else
-        a
+        a + 2
     end
 ";
             using (var reader = StringHelpers.TextReaderFromString(input))
@@ -25,6 +26,9 @@ namespace ExpressionEvaluator.Test
                 var parser = new Parser(lexer);
 
                 var expression = parser.ParseExpression();
+
+                var model = new SemanticModel(parser.Diagnostics);
+                var expressionInfo = model.GetExpressionInfo(expression);
 
                 if (parser.Diagnostics.Any())
                 {

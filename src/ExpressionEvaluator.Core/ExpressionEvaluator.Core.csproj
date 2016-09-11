@@ -28,6 +28,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SemanticAnalysis\ExpressionInfo.cs" />
+    <Compile Include="SemanticAnalysis\IExpressionInfo.cs" />
+    <Compile Include="SemanticAnalysis\ImportedTypeSymbol.cs" />
+    <Compile Include="SemanticAnalysis\ITypeSymbol.cs" />
+    <Compile Include="SemanticAnalysis\SemanticModel.cs" />
     <Compile Include="SyntaxAnalysis\Ast\BooleanLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\FalseLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\IfThenExpression.cs" />
