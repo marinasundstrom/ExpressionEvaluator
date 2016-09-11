@@ -35,6 +35,12 @@ namespace ExpressionEvaluator.LexicalAnalysis
         public DiagnosticsBag Diagnostics { get; }
 
         /// <summary>
+        /// Gets the current level of indentation.
+        /// </summary>
+        /// <value>The indenation.</value>
+        public int Indentation { get; private set; }
+
+        /// <summary>
         /// Gets the text reader.
         /// </summary>
         /// <value>The text reader.</value>
@@ -245,6 +251,10 @@ namespace ExpressionEvaluator.LexicalAnalysis
                         case ')':
                             return new TokenInfo(TokenKind.CloseParen, line, column, 1, ")");
 
+                        case '\t':
+                            ReadIndentation(column);
+                            break;
+
                         case ' ':
                             break;
 
@@ -254,6 +264,9 @@ namespace ExpressionEvaluator.LexicalAnalysis
                         case '\n':
                             Line++;
                             Column = 1;
+                            Indentation = 0;
+
+                            ReadIndentation();
                             break;
 
                         default:
@@ -264,6 +277,36 @@ namespace ExpressionEvaluator.LexicalAnalysis
             }
 
             return new TokenInfo(TokenKind.EndOfFile, Line, Column, 0);
+        }
+
+        public void ReadIndentation()
+        {
+            ReadIndentation(Column);
+        }
+
+        private void ReadIndentation(int column)
+        {
+            if (column == 1)
+            {
+                char c2 = PeekChar();
+                if (c2 == '\t')
+                {
+                    Indentation += 4;
+                }
+                else if (c2 == ' ')
+                {
+                    c2 = PeekChar();
+
+                    while (c2 == ' ')
+                    {
+                        ReadChar();
+
+                        Indentation++;
+
+                        c2 = PeekChar();
+                    }
+                }
+            }
         }
 
         private bool IsEofCore

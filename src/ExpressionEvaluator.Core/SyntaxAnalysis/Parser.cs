@@ -377,10 +377,11 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             {
                 Diagnostics.AddError(string.Format(Strings.Error_ExpectedKeyword, "then"), thenKeyword.GetSpan());
             }
+
             if (!MaybeEat(TokenKind.EndKeyword, out token2))
             {
                 body = ParseExpression();
-                if(body == null)
+                if (body == null)
                 {
                     Diagnostics.AddError(Strings.Error_ExpectedExpression, token2.GetSpan());
                 }
@@ -446,11 +447,27 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             return false;
         }
 
+        internal bool IsEof
+        {
+            get
+            {
+                return Lexer.IsEof;
+            }
+        }
+
         internal bool IsEol
         {
             get
             {
                 return Lexer.IsEol;
+            }
+        }
+
+        internal int Indentation
+        {
+            get
+            {
+                return Lexer.Indentation;
             }
         }
 
