@@ -274,5 +274,44 @@ namespace ExpressionEvaluator.Tests
                 Assert.Equal(expectedValueString, token.Value);
             }
         }
+
+        [Fact(DisplayName = nameof(Indentation))]
+        public void Indentation()
+        {
+            var source =
+@"  23
+    x
+44
+    test
+";
+            using (var reader = StringHelpers.TextReaderFromString(source))
+            {
+                var lexer = new Lexer(reader);
+
+                lexer.ReadIndentation();
+
+                Assert.Equal(2, lexer.Indentation);
+
+                var token1 = lexer.ReadToken();
+
+                Assert.Equal(TokenKind.Number, token1.Kind);
+                Assert.Equal(2, lexer.Indentation);
+
+                var token2 = lexer.ReadToken();
+
+                Assert.Equal(TokenKind.Identifier, token2.Kind);
+                Assert.Equal(4, lexer.Indentation);
+
+                var token3 = lexer.ReadToken();
+
+                Assert.Equal(TokenKind.Number, token3.Kind);
+                Assert.Equal(0, lexer.Indentation);
+
+                var token4 = lexer.PeekToken();
+
+                Assert.Equal(TokenKind.Identifier, token4.Kind);
+                Assert.Equal(4, lexer.Indentation);
+            }
+        }
     }
 }

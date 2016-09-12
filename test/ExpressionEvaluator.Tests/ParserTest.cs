@@ -218,45 +218,5 @@ end
                 var exp2 = parser.ParseExpression();
             }
         }
-
-        [Fact(DisplayName = nameof(Indentation))]
-        public void Indentation()
-        {
-            var source =
-@"  23
-    x
-44
-    test
-";
-            using (var reader = StringHelpers.TextReaderFromString(source))
-            {
-                var lexer = new Lexer(reader);
-                var parser = new Parser(lexer);
-
-                lexer.ReadIndentation();
-
-                Assert.Equal(2, lexer.Indentation);
-
-                var token1 = parser.ReadToken();
-
-                Assert.Equal(TokenKind.Number, token1.Kind);
-                Assert.Equal(2, lexer.Indentation);
-
-                var token2 = parser.ReadToken();
-
-                Assert.Equal(TokenKind.Identifier, token2.Kind);
-                Assert.Equal(4, lexer.Indentation);
-
-                var token3 = parser.ReadToken();
-
-                Assert.Equal(TokenKind.Number, token3.Kind);
-                Assert.Equal(0, lexer.Indentation);
-
-                var token4 = parser.PeekToken();
-
-                Assert.Equal(TokenKind.Identifier, token4.Kind);
-                Assert.Equal(4, lexer.Indentation);
-            }
-        }
     }
 }
