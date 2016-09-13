@@ -1,6 +1,7 @@
 ﻿using ExpressionEvaluator.Diagnostics;
 using ExpressionEvaluator.Properties;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -108,16 +109,29 @@ namespace ExpressionEvaluator.LexicalAnalysis
             private set;
         }
 
-        /// <summary>
-        /// Internal method for reading a token.
-        /// </summary>
-        /// <returns>The token core.</returns>
+        private IEnumerator<TokenInfo> enumerator;
+
         internal TokenInfo ReadTokenCore()
+        {
+            if(enumerator == null)
+            {
+                enumerator = GetEnumerable().GetEnumerator();
+            }
+
+            enumerator.MoveNext();
+            var token = enumerator.Current;
+            return token;
+        }
+
+        internal IEnumerable<TokenInfo> GetEnumerable()
         {
             while (!IsEofCore)
             {
                 int line = Line;
                 int column = Column;
+
+                foreach (var indention in ReadIndentation(column))
+                    yield return indention;
 
                 var c = PeekChar();
 
@@ -136,10 +150,12 @@ namespace ExpressionEvaluator.LexicalAnalysis
                     var str = stringBuilder.ToString();
                     if(Enum.TryParse<TokenKind>(string.Format($"{str.Capitalize()}Keyword"), false, out var result))
                     {
-                        return new TokenInfo(result, line, column, str.Length, str);
+                        yield return new TokenInfo(result, line, column, str.Length, str);
                     }
-
-                    return new TokenInfo(TokenKind.Identifier, line, column, str.Length, str);
+                    else
+                    {
+                        yield return new TokenInfo(TokenKind.Identifier, line, column, str.Length, str);
+                    }                  
                 }
                 else if (char.IsDigit(c))
                 {
@@ -153,7 +169,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
                         c = PeekChar();
                     } while (char.IsDigit(c));
 
-                    return new TokenInfo(TokenKind.Number, line, column, stringBuilder.Length, stringBuilder.ToString());
+                    yield return new TokenInfo(TokenKind.Number, line, column, stringBuilder.Length, stringBuilder.ToString());
                 }
                 else
                 {
@@ -164,58 +180,76 @@ namespace ExpressionEvaluator.LexicalAnalysis
                     switch (c)
                     {
                         case '+':
-                            return new TokenInfo(TokenKind.Plus, line, column, 1, "+");
+                            yield return new TokenInfo(TokenKind.Plus, line, column, 1, "+");
+                            break;
 
                         case '-':
-                            return new TokenInfo(TokenKind.Minus, line, column, 1, "-");
+                            yield return new TokenInfo(TokenKind.Minus, line, column, 1, "-");
+                            break;
 
                         case '*':
-                            return new TokenInfo(TokenKind.Star, line, column, 1, "*");
+                            yield return new TokenInfo(TokenKind.Star, line, column, 1, "*");
+                            break;
 
                         case '/':
-                            return new TokenInfo(TokenKind.Slash, line, column, 1, "/");
+                            yield return new TokenInfo(TokenKind.Slash, line, column, 1, "/");
+                            break;
 
                         case '%':
-                            return new TokenInfo(TokenKind.Percent, line, column, 1, "%");
+                            yield return new TokenInfo(TokenKind.Percent, line, column, 1, "%");
+                            break;
 
                         case '=':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.Equal, line, column, 1, "==");
+                                yield return new TokenInfo(TokenKind.Equal, line, column, 1, "==");
                             }
-                            return new TokenInfo(TokenKind.Assign, line, column, 1, "=");
+                            else
+                            {
+                                yield return new TokenInfo(TokenKind.Assign, line, column, 1, "=");
+                            }
+                            break;
 
                         case '^':
-                            return new TokenInfo(TokenKind.Caret, line, column, 1, "^");
+                            yield return new TokenInfo(TokenKind.Caret, line, column, 1, "^");
+                            break;
 
                         case ',':
-                            return new TokenInfo(TokenKind.Comma, line, column, 1, ",");
+                            yield return new TokenInfo(TokenKind.Comma, line, column, 1, ",");
+                            break;
 
                         case '.':
-                            return new TokenInfo(TokenKind.Period, line, column, 1, ".");
+                            yield return new TokenInfo(TokenKind.Period, line, column, 1, ".");
+                            break;
 
                         case ';':
-                            return new TokenInfo(TokenKind.Semicolon, line, column, 1, ";");
+                            yield return new TokenInfo(TokenKind.Semicolon, line, column, 1, ";");
+                            break;
 
                         case ':':
-                            return new TokenInfo(TokenKind.Colon, line, column, 1, ":");
+                            yield return new TokenInfo(TokenKind.Colon, line, column, 1, ":");
+                            break;
 
                         case '!':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.NotEquals, line, column, 1);
+                                yield return new TokenInfo(TokenKind.NotEquals, line, column, 1);
                             }
-                            return new TokenInfo(TokenKind.Negate, line, column, 1);
+                            else
+                            {
+                                yield return new TokenInfo(TokenKind.Negate, line, column, 1);
+                            }
+                            break;
 
                         case '&':
                             c2 = ReadChar();
                             if (c2 == '&')
                             {
-                                return new TokenInfo(TokenKind.And, line, column, 1, "&&");
+                                yield return new TokenInfo(TokenKind.And, line, column, 1, "&&");
                             }
                             goto default;
 
@@ -223,7 +257,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             c2 = ReadChar();
                             if (c2 == '|')
                             {
-                                return new TokenInfo(TokenKind.Or, line, column, 1, "||");
+                                yield return new TokenInfo(TokenKind.Or, line, column, 1, "||");
                             }
                             goto default;
 
@@ -232,30 +266,42 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.OpenAngleBracket, line, column, 1, "<=");
+                                yield return new TokenInfo(TokenKind.OpenAngleBracket, line, column, 1, "<=");
                             }
-                            return new TokenInfo(TokenKind.Less, line, column, 1, "<");
+                            else
+                            {
+                                yield return new TokenInfo(TokenKind.Less, line, column, 1, "<");
+                            }
+                            break;
 
                         case '>':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.GreaterOrEqual, line, column, 1, ">=");
+                                yield return new TokenInfo(TokenKind.GreaterOrEqual, line, column, 1, ">=");
                             }
-                            return new TokenInfo(TokenKind.CloseAngleBracket, line, column, 1, ">");
+                            else
+                            {
+                                yield return new TokenInfo(TokenKind.CloseAngleBracket, line, column, 1, ">");
+                            }
+                            break;
 
                         case '(':
-                            return new TokenInfo(TokenKind.OpenParen, line, column, 1, "(");
+                            yield return new TokenInfo(TokenKind.OpenParen, line, column, 1, "(");
+                            break;
 
                         case ')':
-                            return new TokenInfo(TokenKind.CloseParen, line, column, 1, ")");
+                            yield return new TokenInfo(TokenKind.CloseParen, line, column, 1, ")");
+                            break;
 
                         case '\t':
-                            ReadIndentation(column);
+                            foreach (var indention in ReadIndentation(column))
+                                yield return indention;
                             break;
 
                         case ' ':
+                            yield return new TokenInfo(TokenKind.Whitespace, line, column, 1);
                             break;
 
                         case '\r':
@@ -265,33 +311,37 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             Line++;
                             Column = 1;
                             Indentation = 0;
-
-                            ReadIndentation();
+                            yield return new TokenInfo(TokenKind.Newline, line, column, 1);
+                            foreach (var indention in ReadIndentation())
+                                yield return indention;
                             break;
 
                         default:
                             Diagnostics.AddError(string.Format(Strings.Error_InvalidToken, c), new SourceSpan(new SourceLocation(line, column), new SourceLocation(Line, Column)));
-                            return new TokenInfo(TokenKind.Invalid, line, column, 1, c.ToString());
+                            yield return new TokenInfo(TokenKind.Invalid, line, column, 1, c.ToString());
+                            break;
                     }
                 }
             }
 
-            return new TokenInfo(TokenKind.EndOfFile, Line, Column, 0);
+            yield return new TokenInfo(TokenKind.EndOfFile, Line, Column, 0);
         }
 
-        public void ReadIndentation()
+        public IEnumerable<TokenInfo> ReadIndentation()
         {
-            ReadIndentation(Column);
+            return ReadIndentation(Column);
         }
 
-        private void ReadIndentation(int column)
+        private IEnumerable<TokenInfo> ReadIndentation(int column)
         {
+            int indentation = 0;
+
             if (column == 1)
             {
                 char c2 = PeekChar();
                 if (c2 == '\t')
                 {
-                    Indentation += 4;
+                    indentation += 4;
                 }
                 else if (c2 == ' ')
                 {
@@ -301,10 +351,15 @@ namespace ExpressionEvaluator.LexicalAnalysis
                     {
                         ReadChar();
 
-                        Indentation++;
+                        indentation++;
 
                         c2 = PeekChar();
                     }
+                }
+
+                if (indentation > 0)
+                {
+                    yield return new TokenInfo(TokenKind.Whitespace, Line, Column, indentation, new string(' ', indentation));
                 }
             }
         }

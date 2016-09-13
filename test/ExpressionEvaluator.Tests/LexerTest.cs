@@ -1,12 +1,13 @@
 ﻿using ExpressionEvaluator.LexicalAnalysis;
 using ExpressionEvaluator.Utilites;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace ExpressionEvaluator.Tests
 {
-	public class LexerTest
-	{
+    public class LexerTest
+    {
         [Fact(DisplayName = nameof(ReadPeekToken))]
         public void ReadPeekToken()
         {
@@ -311,6 +312,23 @@ namespace ExpressionEvaluator.Tests
 
                 Assert.Equal(TokenKind.Identifier, token4.Kind);
                 Assert.Equal(4, lexer.Indentation);
+            }
+        }
+
+        [Fact(DisplayName = nameof(Test3))]
+        public void Test3()
+        {
+            var source =
+@"  23
+    x
+44
+    test
+";
+            using (var reader = StringHelpers.TextReaderFromString(source))
+            {
+                var lexer = new Lexer(reader);
+
+                var tokens = lexer.GetEnumerable().Take(10).ToList();
             }
         }
     }
