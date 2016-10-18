@@ -5,7 +5,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
     internal class LetExpression : Expression
     {
-        public LetExpression(TokenInfo letKeyword, TokenInfo name, TokenInfo assign, Expression assignedExpression)
+        public LetExpression(SyntaxToken letKeyword, SyntaxToken name, SyntaxToken assign, Expression assignedExpression)
         {
             LetKeyword = letKeyword;
             Name = name;
@@ -17,11 +17,11 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 
         public Expression AssignedExpression { get; }
 
-        public TokenInfo Assign { get; }
+        public SyntaxToken Assign { get; }
 
-        public TokenInfo LetKeyword { get; }
+        public SyntaxToken LetKeyword { get; }
 
-        public TokenInfo Name { get; }
+        public SyntaxToken Name { get; }
 
         public List<Parameter> Parameters { get; }
     }

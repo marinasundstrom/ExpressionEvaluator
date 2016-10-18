@@ -11,7 +11,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
     /// <summary>
     /// Parser.
     /// </summary>
-    public class Parser
+    public partial class Parser
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ExpressionEvaluator.Parser"/> class.
@@ -22,6 +22,8 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             Lexer = lexer;
 
             Diagnostics = lexer.Diagnostics;
+
+            Enumerator = new TokenEnumerator(lexer);
         }
 
         /// <summary>
@@ -48,8 +50,8 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         private Expression ParseOrExpression()
         {
             Expression ret = ParseAndExpression();
-            TokenInfo token;
-            while (MaybeEat(TokenKind.Or, out token))
+            SyntaxToken token;
+            while (MaybeEat(SyntaxKind.Or, out token))
             {
                 ret = new BinaryExpression(token, ret, ParseAndExpression());
             }
@@ -59,8 +61,8 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         private Expression ParseAndExpression()
         {
             Expression ret = ParseNotExpression();
-            TokenInfo token;
-            while (MaybeEat(TokenKind.And, out token))
+            SyntaxToken token;
+            while (MaybeEat(SyntaxKind.And, out token))
             {
                 ret = new BinaryExpression(token, ret, ParseAndExpression());
             }
@@ -69,8 +71,8 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private Expression ParseNotExpression()
         {
-            var token = TokenInfo.Empty;
-            if (MaybeEat(TokenKind.NotKeyword, out token))
+            var token = SyntaxToken.Empty;
+            if (MaybeEat(SyntaxKind.NotKeyword, out token))
             {
                 Expression ret = new UnaryExpression(token, ParseNotExpression());
                 return ret;
@@ -94,12 +96,12 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
                 switch (token.Kind)
                 {
-                    case TokenKind.CloseAngleBracket:
-                    case TokenKind.GreaterOrEqual:
-                    case TokenKind.Less:
-                    case TokenKind.OpenAngleBracket:
-                    case TokenKind.Equal:
-                    case TokenKind.NotEquals:
+                    case SyntaxKind.CloseAngleBracket:
+                    case SyntaxKind.GreaterOrEqual:
+                    case SyntaxKind.Less:
+                    case SyntaxKind.OpenAngleBracket:
+                    case SyntaxKind.Equal:
+                    case SyntaxKind.NotEquals:
                         ReadToken();
                         break;
                     default:
@@ -147,18 +149,18 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         /// <returns><c>true</c>, if the token is an operation, <c>false</c> otherwise.</returns>
         /// <param name="candidateToken">The candidate token for operation.</param>
         /// <param name="precedence">The operator precedence for the resolved operation.</param>
-        private bool TryResolveOperatorPrecedence(TokenInfo candidateToken, out int precedence)
+        private bool TryResolveOperatorPrecedence(SyntaxToken candidateToken, out int precedence)
         {
             switch (candidateToken.Kind)
             {
-                case TokenKind.Percent:
-                case TokenKind.Slash:
-                case TokenKind.Star:
+                case SyntaxKind.Percent:
+                case SyntaxKind.Slash:
+                case SyntaxKind.Star:
                     precedence = 2;
                     break;
 
-                case TokenKind.Minus:
-                case TokenKind.Plus:
+                case SyntaxKind.Minus:
+                case SyntaxKind.Plus:
                     precedence = 1;
                     break;
 
@@ -178,17 +180,17 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         {
             Expression expr;
 
-            TokenInfo token = PeekToken();
+            SyntaxToken token = PeekToken();
 
             switch (token.Kind)
             {
-                case TokenKind.Plus:
+                case SyntaxKind.Plus:
                     ReadToken();
                     expr = ParseFactorExpression();
                     expr = new UnaryExpression(token, expr);
                     break;
 
-                case TokenKind.Minus:
+                case SyntaxKind.Minus:
                     ReadToken();
                     expr = ParseFactorExpression();
                     expr = new UnaryExpression(token, expr);
@@ -209,7 +211,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         {
             Expression expr = ParsePrimaryExpression();
 
-            if (MaybeEat(TokenKind.Caret, out var token))
+            if (MaybeEat(SyntaxKind.Caret, out var token))
             {
                 Expression right = ParseFactorExpression();
                 expr = new BinaryExpression(token, expr, right);
@@ -226,44 +228,44 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         {
             Expression expr = null;
 
-            TokenInfo token;
+            SyntaxToken token;
 
             token = PeekToken();
 
             switch (token.Kind)
             {
-                case TokenKind.Identifier:
+                case SyntaxKind.Identifier:
                     ReadToken();
                     expr = new IdentifierExpression(token);
                     break;
 
-                case TokenKind.TrueKeyword:
+                case SyntaxKind.TrueKeyword:
                     ReadToken();
                     expr = new TrueLiteralExpression(token);
                     break;
 
-                case TokenKind.FalseKeyword:
+                case SyntaxKind.FalseKeyword:
                     ReadToken();
                     expr = new FalseLiteralExpression(token);
                     break;
 
-                case TokenKind.IfKeyword:
+                case SyntaxKind.IfKeyword:
                     expr = ParseIfThenElseExpression();
                     break;
 
-                case TokenKind.LetKeyword:
+                case SyntaxKind.LetKeyword:
                     expr = ParseLetExpression();
                     break;
 
-                case TokenKind.Number:
+                case SyntaxKind.Number:
                     expr = ParseNumberExpression();
                     break;
 
-                case TokenKind.OpenParen:
+                case SyntaxKind.OpenParen:
                     expr = ParseParenthesisExpression();
                     break;
 
-                case TokenKind.EndOfFile:
+                case SyntaxKind.EndOfFile:
                     ReadToken();
                     Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, token.GetSpan());
                     break;
@@ -274,12 +276,12 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private Expression ParseParenthesisExpression()
         {
-            TokenInfo token, token2;
+            SyntaxToken token, token2;
             Expression expr = null;
 
             token = ReadToken();
             token2 = PeekToken();
-            if (!MaybeEat(TokenKind.CloseParen, out token2))
+            if (!MaybeEat(SyntaxKind.CloseParen, out token2))
             {
                 expr = ParseExpression();
             }
@@ -289,7 +291,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             }
             else
             {
-                if (!Eat(TokenKind.CloseParen, out token2))
+                if (!Eat(SyntaxKind.CloseParen, out token2))
                 {
                     Diagnostics.AddError(string.Format(Strings.Error_ExpectedToken, ')'), token2.GetSpan());
                 }
@@ -299,13 +301,13 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private Expression ParseNumberExpression()
         {
-            TokenInfo token, token2, token3;
+            SyntaxToken token, token2, token3;
             Expression expr = null;
 
             token = ReadToken();
-            if (MaybeEat(TokenKind.Period, out token2))
+            if (MaybeEat(SyntaxKind.Period, out token2))
             {
-                if (MaybeEat(TokenKind.Number, out token3))
+                if (MaybeEat(SyntaxKind.Number, out token3))
                 {
                     expr = new RealNumberExpression(token, token2, token3);
                 }
@@ -325,29 +327,25 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         private Expression ParseLetExpression()
         {
             var letKeyword = ReadToken();
-            TokenInfo nameToken, assignToken;
+            SyntaxToken nameToken, assignToken;
 
             List<Parameter> parameters = new List<Parameter>();
             
             Expression assignedExpression = null;
-            if (!Eat(TokenKind.Identifier, out nameToken))
+            if (!Eat(SyntaxKind.Identifier, out nameToken))
             {
                 Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, nameToken.GetSpan());
             }
-            TokenInfo token = PeekToken();
-            if(token.Kind != TokenKind.Assign && token.Kind == TokenKind.Identifier)
+            SyntaxToken token = PeekToken();
+            if(token.Kind != SyntaxKind.Assign && token.Kind == SyntaxKind.Identifier)
             {
-                while(MaybeEat(TokenKind.Identifier, out token))
+                while(MaybeEat(SyntaxKind.Identifier, out token))
                 {
                     parameters.Add(new Parameter(token));
                 }
             }
-            else
-            {
-                ReadToken();
-                Diagnostics.AddError(Strings.Error_ExpectedToken, token.GetSpan());
-            }
-            if (!Eat(TokenKind.Assign, out assignToken))
+
+            if (!Eat(SyntaxKind.Assign, out assignToken))
             {
                 Diagnostics.AddError(Strings.Error_UnexpectedEndOfFile, assignToken.GetSpan());
             }
@@ -367,18 +365,18 @@ namespace ExpressionEvaluator.SyntaxAnalysis
 
         private Expression ParseIfThenElseExpression()
         {
-            TokenInfo token, token2, token3;
+            SyntaxToken token, token2, token3;
             token = ReadToken();
             var condition = ParseExpression();
-            TokenInfo thenKeyword, endKeyword;
+            SyntaxToken thenKeyword, endKeyword;
             Expression body = null;
             Expression elseBody = null;
-            if (!Eat(TokenKind.ThenKeyword, out thenKeyword))
+            if (!Eat(SyntaxKind.ThenKeyword, out thenKeyword))
             {
                 Diagnostics.AddError(string.Format(Strings.Error_ExpectedKeyword, "then"), thenKeyword.GetSpan());
             }
 
-            if (!MaybeEat(TokenKind.EndKeyword, out token2))
+            if (!MaybeEat(SyntaxKind.EndKeyword, out token2))
             {
                 body = ParseExpression();
                 if (body == null)
@@ -390,7 +388,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
             {
                 Diagnostics.AddError(Strings.Error_ExpectedExpression, token2.GetSpan());
             }
-            if (MaybeEat(TokenKind.ElseKeyword, out token3))
+            if (MaybeEat(SyntaxKind.ElseKeyword, out token3))
             {
                 elseBody = ParseExpression();
                 if (elseBody == null)
@@ -398,52 +396,54 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     Diagnostics.AddError(Strings.Error_ExpectedExpression, token3.GetSpan());
                 }
             }
-            MaybeEat(TokenKind.EndKeyword, out endKeyword);
+            MaybeEat(SyntaxKind.EndKeyword, out endKeyword);
             return new IfThenExpression(token, condition, thenKeyword, body, token3, elseBody, endKeyword);
         }
 
         #region Lexer helpers
 
-        internal TokenInfo PeekToken()
+        internal SyntaxToken PeekToken()
         {
-            return Lexer.PeekToken();
+            return Enumerator.PeekToken();
         }
 
-        internal TokenInfo ReadToken()
+        internal SyntaxToken ReadToken()
         {
-            return Lexer.ReadToken();
+            return Enumerator.ReadToken();
         }
 
-        internal bool MaybeEat(TokenKind kind)
+        internal bool MaybeEat(SyntaxKind kind)
         {
-            TokenInfo tokenInfo;
-            return MaybeEat(kind, out tokenInfo);
+            SyntaxToken syntaxToken;
+            return MaybeEat(kind, out syntaxToken);
         }
 
-        internal bool MaybeEat(TokenKind kind, out TokenInfo tokenInfo)
+        internal bool MaybeEat(SyntaxKind kind, out SyntaxToken syntaxToken)
         {
-            tokenInfo = PeekToken();
-            if (tokenInfo.Kind == kind)
+            syntaxToken = PeekToken();
+            if (syntaxToken.Kind == kind)
             {
                 ReadToken();
                 return true;
             }
+            syntaxToken = SyntaxToken.Missing;
             return false;
         }
 
-        internal bool Eat(TokenKind kind)
+        internal bool Eat(SyntaxKind kind)
         {
-            TokenInfo tokenInfo;
-            return Eat(kind, out tokenInfo);
+            SyntaxToken syntaxToken;
+            return Eat(kind, out syntaxToken);
         }
 
-        internal bool Eat(TokenKind kind, out TokenInfo tokenInfo)
+        internal bool Eat(SyntaxKind kind, out SyntaxToken syntaxToken)
         {
-            tokenInfo = ReadToken();
-            if (tokenInfo.Kind == kind)
+            syntaxToken = ReadToken();
+            if (syntaxToken.Kind == kind)
             {
                 return true;
             }
+            syntaxToken = SyntaxToken.Missing;
             return false;
         }
 
@@ -470,6 +470,8 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                 return Lexer.Indentation;
             }
         }
+
+        private TokenEnumerator Enumerator { get; set; }
 
         #endregion
     }

@@ -4,12 +4,12 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
     public class IdentifierExpression : Expression
     {
-        public IdentifierExpression(TokenInfo token)
+        public IdentifierExpression(SyntaxToken token)
         {
             Token = token;
         }
 
-        public TokenInfo Token { get; }
+        public SyntaxToken Token { get; }
 
         public string Name
         {

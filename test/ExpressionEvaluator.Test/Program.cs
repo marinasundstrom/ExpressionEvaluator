@@ -22,6 +22,13 @@ namespace ExpressionEvaluator.Test
             using (var reader = StringHelpers.TextReaderFromString(input))
             {
                 var lexer = new Lexer(reader);
+
+                //while (!lexer.IsEof)
+                //{
+                //    var t = lexer.ReadToken();
+                //    Console.WriteLine(t.Kind);
+                //}
+
                 var parser = new Parser(lexer);
 
                 var expression = parser.ParseExpression();

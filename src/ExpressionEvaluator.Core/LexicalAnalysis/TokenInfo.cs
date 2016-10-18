@@ -1,14 +1,16 @@
-﻿namespace ExpressionEvaluator.LexicalAnalysis
+﻿using ExpressionEvaluator.SyntaxAnalysis.AST;
+
+namespace ExpressionEvaluator.LexicalAnalysis
 {
 	public struct TokenInfo
 	{
-		public TokenInfo(TokenKind kind, int line, int column, int width) 
+		public TokenInfo(SyntaxKind kind, int line, int column, int width) 
 			: this(kind, line, column, width, string.Empty)
 		{ 
 
 		}
 
-		public TokenInfo(TokenKind kind, int line, int column, int width, string value)
+		public TokenInfo(SyntaxKind kind, int line, int column, int width, string value)
 		{
 			Kind = kind;
             Line = line;
@@ -17,7 +19,7 @@
 			Value = value;
 		}
 
-		public TokenKind Kind { get; }
+		public SyntaxKind Kind { get; }
 
 		public string Value { get; }
 

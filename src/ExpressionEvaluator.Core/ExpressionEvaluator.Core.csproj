@@ -32,6 +32,10 @@
     <Compile Include="SyntaxAnalysis\Ast\FalseLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\IfThenExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\Parameter.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\SyntaxKind.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\SyntaxNode.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\SyntaxToken.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\SyntaxTrivia.cs" />
     <Compile Include="SyntaxAnalysis\ITreeVisitor.cs" />
     <Compile Include="Diagnostics\Diagnostic.cs" />
     <Compile Include="Diagnostics\DiagnosticsBag.cs" />
@@ -50,7 +54,6 @@
     <Compile Include="SourceSpan.cs" />
     <Compile Include="LexicalAnalysis\TokenInfo.cs" />
     <Compile Include="LexicalAnalysis\TokenInfoExtensions.cs" />
-    <Compile Include="LexicalAnalysis\TokenKind.cs" />
     <Compile Include="LexicalAnalysis\Lexer.cs" />
     <Compile Include="SyntaxAnalysis\Ast\TrueLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\LetExpression.cs" />
@@ -69,6 +72,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SyntaxAnalysis\Parser.TokenEnumerator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

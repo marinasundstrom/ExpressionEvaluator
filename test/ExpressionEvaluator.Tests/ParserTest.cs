@@ -9,6 +9,18 @@ namespace ExpressionEvaluator.Tests
 {
 	public class ParserTest
 	{
+        [Fact(DisplayName = nameof(ReadToken2))]
+        public void ReadToken2()
+        {
+            using (var reader = StringHelpers.TextReaderFromString("42"))
+            {
+                var lexer = new Lexer(reader);
+                var parser = new Parser(lexer);
+
+                var x = parser.ReadToken();
+            }
+        }
+
         [Fact(DisplayName = nameof(MaybeEat_Success))]
         public void MaybeEat_Success()
         {
@@ -17,15 +29,13 @@ namespace ExpressionEvaluator.Tests
                 var lexer = new Lexer(reader);
                 var parser = new Parser(lexer);
 
-                TokenInfo token, token2;
+                SyntaxToken token, token2;
 
-                var result = parser.MaybeEat(TokenKind.Number, out token);
+                var result = parser.MaybeEat(SyntaxKind.Number, out token);
 
                 Assert.True(result);
 
-                token2 = parser.PeekToken();
-
-                Assert.NotEqual(token2.Kind, token.Kind);
+                Assert.NotEqual(SyntaxKind.Missing, token.Kind);
             }
         }
 
@@ -37,15 +47,17 @@ namespace ExpressionEvaluator.Tests
                 var lexer = new Lexer(reader);
                 var parser = new Parser(lexer);
 
-                TokenInfo token, token2;
+                SyntaxToken token, token2;
 
-                var result = parser.MaybeEat(TokenKind.Identifier, out token);
+                var result = parser.MaybeEat(SyntaxKind.Identifier, out token);
 
                 Assert.False(result);
 
+                Assert.Equal(SyntaxKind.Missing, token.Kind);
+
                 token2 = parser.PeekToken();
 
-                Assert.Equal(token2.Kind, token.Kind);
+                Assert.Equal(SyntaxKind.Number, token2.Kind);
             }
         }
 
@@ -57,9 +69,9 @@ namespace ExpressionEvaluator.Tests
                 var lexer = new Lexer(reader);
                 var parser = new Parser(lexer);
 
-                TokenInfo token, token2;
+                SyntaxToken token, token2;
 
-                var result = parser.Eat(TokenKind.Number, out token);
+                var result = parser.Eat(SyntaxKind.Number, out token);
 
                 Assert.True(result);
 
@@ -77,9 +89,9 @@ namespace ExpressionEvaluator.Tests
                 var lexer = new Lexer(reader);
                 var parser = new Parser(lexer);
 
-                TokenInfo token, token2;
+                SyntaxToken token, token2;
 
-                var result = parser.Eat(TokenKind.Identifier, out token);
+                var result = parser.Eat(SyntaxKind.Identifier, out token);
 
                 Assert.False(result);
 
@@ -100,7 +112,7 @@ namespace ExpressionEvaluator.Tests
                 var expr = parser.ParseExpression() as IntegerNumberExpression;
 
 				Assert.True(expr is IntegerNumberExpression);
-                Assert.NotEqual(TokenInfo.Empty, expr.Token);
+                Assert.NotEqual(SyntaxToken.Empty, expr.Token);
                 Assert.Equal(2, expr.Value);
             }
 		}
@@ -116,7 +128,7 @@ namespace ExpressionEvaluator.Tests
                 var expr = parser.ParseExpression() as IntegerNumberExpression;
 
                 Assert.True(expr is IntegerNumberExpression);
-                Assert.NotEqual(TokenInfo.Empty, expr.Token);
+                Assert.NotEqual(SyntaxToken.Empty, expr.Token);
                 Assert.Equal(42, expr.Value);
             }
         }
@@ -132,9 +144,9 @@ namespace ExpressionEvaluator.Tests
                 var expr = parser.ParseExpression() as RealNumberExpression;
 
                 Assert.True(expr is RealNumberExpression);
-                Assert.NotEqual(TokenInfo.Empty, expr.Number);
-                Assert.NotEqual(TokenInfo.Empty, expr.Separator);
-                Assert.NotEqual(TokenInfo.Empty, expr.Fraction);
+                Assert.NotEqual(SyntaxToken.Empty, expr.Number);
+                Assert.NotEqual(SyntaxToken.Empty, expr.Separator);
+                Assert.NotEqual(SyntaxToken.Empty, expr.Fraction);
                 Assert.Equal(4.2, expr.Value);
             }
         }
@@ -150,7 +162,7 @@ namespace ExpressionEvaluator.Tests
                 var expr = parser.ParseExpression() as BinaryExpression;
 
                 Assert.True(expr is BinaryExpression);
-                Assert.NotEqual(TokenInfo.Empty, expr.Operator);
+                Assert.NotEqual(SyntaxToken.Empty, expr.Operator);
                 Assert.True(expr.Left is NumberExpression);
                 Assert.True(expr.Right is NumberExpression);
             }

@@ -6,18 +6,18 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 
     public class RealNumberExpression : NumberExpression
 	{
-		public RealNumberExpression(TokenInfo number, TokenInfo separator, TokenInfo fraction)
+		public RealNumberExpression(SyntaxToken number, SyntaxToken separator, SyntaxToken fraction)
 		{
             Number = number;
             Separator = separator;
             Fraction = fraction;
 		}
 
-		public TokenInfo Number { get; }
+		public SyntaxToken Number { get; }
 
-        public TokenInfo Separator { get; }
+        public SyntaxToken Separator { get; }
 
-        public TokenInfo Fraction { get; }
+        public SyntaxToken Fraction { get; }
 
         public double Value
         {

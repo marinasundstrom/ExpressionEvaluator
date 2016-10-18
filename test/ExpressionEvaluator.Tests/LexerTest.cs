@@ -1,4 +1,5 @@
 ﻿using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.SyntaxAnalysis.AST;
 using ExpressionEvaluator.Utilites;
 using System;
 using Xunit;
@@ -17,17 +18,17 @@ namespace ExpressionEvaluator.Tests
                 var token1 = lexer.PeekToken();
                 var token2 = lexer.ReadToken();
 
-                Assert.Equal(TokenKind.Number, token2.Kind);
+                Assert.Equal(SyntaxKind.Number, token2.Kind);
                 Assert.Equal(token1.Kind, token2.Kind);
 
                 var token3 = lexer.ReadToken();
 
-                Assert.Equal(TokenKind.Plus, token3.Kind);
+                Assert.Equal(SyntaxKind.Plus, token3.Kind);
 
                 var token4 = lexer.PeekToken();
                 var token5 = lexer.ReadToken();
 
-                Assert.Equal(TokenKind.Number, token4.Kind);
+                Assert.Equal(SyntaxKind.Number, token4.Kind);
                 Assert.Equal(token1.Kind, token5.Kind);
             }
         }
@@ -45,19 +46,19 @@ namespace ExpressionEvaluator.Tests
                 var token4 = lexer.ReadTokenCore();
                 var token5 = lexer.ReadTokenCore();
 
-                Assert.Equal(TokenKind.Number, token1.Kind);
+                Assert.Equal(SyntaxKind.Number, token1.Kind);
                 Assert.Equal(1, token1.Column);
 
-                Assert.Equal(TokenKind.Plus, token2.Kind);
+                Assert.Equal(SyntaxKind.Plus, token2.Kind);
                 Assert.Equal(3, token2.Column);
 
-                Assert.Equal(TokenKind.Number, token3.Kind);
+                Assert.Equal(SyntaxKind.Number, token3.Kind);
                 Assert.Equal(4, token3.Column);
 
-                Assert.Equal(TokenKind.Star, token4.Kind);
+                Assert.Equal(SyntaxKind.Star, token4.Kind);
                 Assert.Equal(5, token4.Column);
 
-                Assert.Equal(TokenKind.Number, token5.Kind);
+                Assert.Equal(SyntaxKind.Number, token5.Kind);
                 Assert.Equal(6, token5.Column);
             }
         }
@@ -75,19 +76,19 @@ namespace ExpressionEvaluator.Tests
                 var token4 = lexer.ReadTokenCore();
                 var token5 = lexer.ReadTokenCore();
 
-                Assert.Equal(TokenKind.Number, token1.Kind);
+                Assert.Equal(SyntaxKind.Number, token1.Kind);
                 Assert.Equal(1, token1.Column);
 
-                Assert.Equal(TokenKind.Plus, token2.Kind);
+                Assert.Equal(SyntaxKind.Plus, token2.Kind);
                 Assert.Equal(4, token2.Column);
 
-                Assert.Equal(TokenKind.Number, token3.Kind);
+                Assert.Equal(SyntaxKind.Number, token3.Kind);
                 Assert.Equal(6, token3.Column);
 
-                Assert.Equal(TokenKind.Star, token4.Kind);
+                Assert.Equal(SyntaxKind.Star, token4.Kind);
                 Assert.Equal(8, token4.Column);
 
-                Assert.Equal(TokenKind.Number, token5.Kind);
+                Assert.Equal(SyntaxKind.Number, token5.Kind);
                 Assert.Equal(10, token5.Column);
             }
         }
@@ -144,7 +145,7 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(ReadToken_Number_OneDigit))]
         public void ReadToken_Number_OneDigit()
         {
-            TokenKind expectedValueKind = TokenKind.Number;
+            SyntaxKind expectedValueKind = SyntaxKind.Number;
             string expectedValueString = "5";
 
             string inputString = "5";
@@ -162,7 +163,7 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(ReadToken_Number_MoreThanOneDigit))]
         public void ReadToken_Number_MoreThanOneDigit()
         {
-            TokenKind expectedValueKind = TokenKind.Number;
+            SyntaxKind expectedValueKind = SyntaxKind.Number;
             string expectedValueString = "42";
 
             string inputString = "42";
@@ -180,7 +181,7 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(ReadToken_Number_WithTrailingSpace))]
         public void ReadToken_Number_WithTrailingSpace()
         {
-            TokenKind expectedValueKind = TokenKind.Number;
+            SyntaxKind expectedValueKind = SyntaxKind.Number;
             string expectedValueString = "6";
 
             string inputString = "6 ";
@@ -198,7 +199,7 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(ReadToken_Plus))]
         public void ReadToken_Plus()
         {
-            TokenKind expectedValueKind = TokenKind.Plus;
+            SyntaxKind expectedValueKind = SyntaxKind.Plus;
             string expectedValueString = "+";
 
             using (var reader = StringHelpers.TextReaderFromString(expectedValueString))
@@ -214,7 +215,7 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(ReadToken_Minus))]
         public void ReadToken_Minus()
         {
-            TokenKind expectedValueKind = TokenKind.Minus;
+            SyntaxKind expectedValueKind = SyntaxKind.Minus;
             string expectedValueString = "-";
 
             using (var reader = StringHelpers.TextReaderFromString(expectedValueString))
@@ -230,7 +231,7 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(ReadToken_Star))]
         public void ReadToken_Star()
         {
-            TokenKind expectedValueKind = TokenKind.Star;
+            SyntaxKind expectedValueKind = SyntaxKind.Star;
             string expectedValueString = "*";
 
             using (var reader = StringHelpers.TextReaderFromString(expectedValueString))
@@ -246,7 +247,7 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(ReadToken_Slash))]
         public void ReadToken_Slash()
         {
-            TokenKind expectedValueKind = TokenKind.Slash;
+            SyntaxKind expectedValueKind = SyntaxKind.Slash;
             string expectedValueString = "/";
 
             using (var reader = StringHelpers.TextReaderFromString(expectedValueString))
@@ -262,7 +263,7 @@ namespace ExpressionEvaluator.Tests
         [Fact(DisplayName = nameof(ReadToken_IfKeyword))]
         public void ReadToken_IfKeyword()
         {
-            TokenKind expectedValueKind = TokenKind.IfKeyword;
+            SyntaxKind expectedValueKind = SyntaxKind.IfKeyword;
             string expectedValueString = "if";
 
             using (var reader = StringHelpers.TextReaderFromString(expectedValueString))
@@ -272,45 +273,6 @@ namespace ExpressionEvaluator.Tests
 
                 Assert.Equal(expectedValueKind, token.Kind);
                 Assert.Equal(expectedValueString, token.Value);
-            }
-        }
-
-        [Fact(DisplayName = nameof(Indentation))]
-        public void Indentation()
-        {
-            var source =
-@"  23
-    x
-44
-    test
-";
-            using (var reader = StringHelpers.TextReaderFromString(source))
-            {
-                var lexer = new Lexer(reader);
-
-                lexer.ReadIndentation();
-
-                Assert.Equal(2, lexer.Indentation);
-
-                var token1 = lexer.ReadToken();
-
-                Assert.Equal(TokenKind.Number, token1.Kind);
-                Assert.Equal(2, lexer.Indentation);
-
-                var token2 = lexer.ReadToken();
-
-                Assert.Equal(TokenKind.Identifier, token2.Kind);
-                Assert.Equal(4, lexer.Indentation);
-
-                var token3 = lexer.ReadToken();
-
-                Assert.Equal(TokenKind.Number, token3.Kind);
-                Assert.Equal(0, lexer.Indentation);
-
-                var token4 = lexer.PeekToken();
-
-                Assert.Equal(TokenKind.Identifier, token4.Kind);
-                Assert.Equal(4, lexer.Indentation);
             }
         }
     }

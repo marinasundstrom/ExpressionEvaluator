@@ -5,12 +5,12 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 
     public class IntegerNumberExpression : NumberExpression
     {
-        public IntegerNumberExpression(TokenInfo token)
+        public IntegerNumberExpression(SyntaxToken token)
         {
             Token = token;
         }
 
-        public TokenInfo Token { get; }
+        public SyntaxToken Token { get; }
 
         public int Value
         {

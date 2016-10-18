@@ -4,11 +4,11 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
     public class Parameter
     {
-        public Parameter(TokenInfo name)
+        public Parameter(SyntaxToken name)
         {
             Name = name;
         }
 
-        public TokenInfo Name { get; }
+        public SyntaxToken Name { get; }
     }
 }

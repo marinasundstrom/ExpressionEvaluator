@@ -5,7 +5,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 
     public class IfThenExpression : Expression
     {
-        public IfThenExpression(TokenInfo ifKeyword, Expression condition, TokenInfo thenKeyword, Expression body, TokenInfo endKeyword)
+        public IfThenExpression(SyntaxToken ifKeyword, Expression condition, SyntaxToken thenKeyword, Expression body, SyntaxToken endKeyword)
         {
             IfKeyword = ifKeyword;
             Condition = condition;
@@ -14,7 +14,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
             EndKeyword = endKeyword;
         }
 
-        public IfThenExpression(TokenInfo ifKeyword, Expression condition, TokenInfo thenKeyword, Expression body, TokenInfo elseKeyword, Expression elseBody, TokenInfo endKeyword)
+        public IfThenExpression(SyntaxToken ifKeyword, Expression condition, SyntaxToken thenKeyword, Expression body, SyntaxToken elseKeyword, Expression elseBody, SyntaxToken endKeyword)
         {
             IfKeyword = ifKeyword;
             Condition = condition;
@@ -25,18 +25,18 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
             EndKeyword = endKeyword;
         }
 
-        public TokenInfo IfKeyword { get; }
+        public SyntaxToken IfKeyword { get; }
 
         public Expression Condition { get; }
 
-        public TokenInfo ThenKeyword { get; }
+        public SyntaxToken ThenKeyword { get; }
 
         public Expression Body { get; }
 
-        public TokenInfo ElseKeyword { get; }
+        public SyntaxToken ElseKeyword { get; }
 
         public Expression ElseBody { get; }
 
-        public TokenInfo EndKeyword { get; }
+        public SyntaxToken EndKeyword { get; }
     }
 }

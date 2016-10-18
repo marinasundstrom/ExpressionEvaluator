@@ -80,22 +80,22 @@ namespace ExpressionEvaluator
         {
             switch(binaryExpression.Operator.Kind)
             {
-                case TokenKind.Plus:
+                case SyntaxKind.Plus:
                     return BinaryOperation.Add;
 
-                case TokenKind.Minus:
+                case SyntaxKind.Minus:
                     return BinaryOperation.Subtract;
 
-                case TokenKind.Star:
+                case SyntaxKind.Star:
                     return BinaryOperation.Multiply;
 
-                case TokenKind.Slash:
+                case SyntaxKind.Slash:
                     return BinaryOperation.Divide;
 
-                case TokenKind.Percent:
+                case SyntaxKind.Percent:
                     return BinaryOperation.Modulo;
 
-                case TokenKind.Caret:
+                case SyntaxKind.Caret:
                     return BinaryOperation.Power;
             }
 

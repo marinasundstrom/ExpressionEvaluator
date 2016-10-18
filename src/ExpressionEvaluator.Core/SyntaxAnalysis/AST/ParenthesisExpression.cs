@@ -9,17 +9,17 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
     public class ParenthesisExpression : Expression
     {
-        public ParenthesisExpression(TokenInfo openParen, Expression expression, TokenInfo closeParen)
+        public ParenthesisExpression(SyntaxToken openParen, Expression expression, SyntaxToken closeParen)
         {
             OpenParen = openParen;
             Expression = expression;
             CloseParen = closeParen;
         }
 
-        public TokenInfo OpenParen { get; private set; }
+        public SyntaxToken OpenParen { get; private set; }
 
         public Expression Expression { get; private set; }
 
-        public TokenInfo CloseParen { get; private set; }
+        public SyntaxToken CloseParen { get; private set; }
     }
 }

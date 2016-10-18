@@ -4,9 +4,9 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
     public abstract class BooleanLiteralExpression : Expression
     {
-        private TokenInfo token;
+        private SyntaxToken token;
 
-        public BooleanLiteralExpression(TokenInfo token)
+        public BooleanLiteralExpression(SyntaxToken token)
         {
             this.token = token;
         }

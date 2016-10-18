@@ -5,7 +5,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
 
     public class TrueLiteralExpression : BooleanLiteralExpression
     {
-        public TrueLiteralExpression(TokenInfo token)
+        public TrueLiteralExpression(SyntaxToken token)
             : base(token)
         {
             

@@ -1,5 +1,6 @@
 ﻿using ExpressionEvaluator.Diagnostics;
 using ExpressionEvaluator.Properties;
+using ExpressionEvaluator.SyntaxAnalysis.AST;
 using System;
 using System.IO;
 using System.Linq;
@@ -94,7 +95,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
         {
             get
             {
-                return PeekToken().Kind == TokenKind.EndOfFile;
+                return PeekToken().Kind == SyntaxKind.EndOfFile;
             }
         }
 
@@ -134,12 +135,12 @@ namespace ExpressionEvaluator.LexicalAnalysis
                     } while (char.IsLetterOrDigit(c));
 
                     var str = stringBuilder.ToString();
-                    if(Enum.TryParse<TokenKind>(string.Format($"{str.Capitalize()}Keyword"), false, out var result))
+                    if(Enum.TryParse<SyntaxKind>(string.Format($"{str.Capitalize()}Keyword"), false, out var result))
                     {
                         return new TokenInfo(result, line, column, str.Length, str);
                     }
 
-                    return new TokenInfo(TokenKind.Identifier, line, column, str.Length, str);
+                    return new TokenInfo(SyntaxKind.Identifier, line, column, str.Length, str);
                 }
                 else if (char.IsDigit(c))
                 {
@@ -153,7 +154,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
                         c = PeekChar();
                     } while (char.IsDigit(c));
 
-                    return new TokenInfo(TokenKind.Number, line, column, stringBuilder.Length, stringBuilder.ToString());
+                    return new TokenInfo(SyntaxKind.Number, line, column, stringBuilder.Length, stringBuilder.ToString());
                 }
                 else
                 {
@@ -164,58 +165,58 @@ namespace ExpressionEvaluator.LexicalAnalysis
                     switch (c)
                     {
                         case '+':
-                            return new TokenInfo(TokenKind.Plus, line, column, 1, "+");
+                            return new TokenInfo(SyntaxKind.Plus, line, column, 1, "+");
 
                         case '-':
-                            return new TokenInfo(TokenKind.Minus, line, column, 1, "-");
+                            return new TokenInfo(SyntaxKind.Minus, line, column, 1, "-");
 
                         case '*':
-                            return new TokenInfo(TokenKind.Star, line, column, 1, "*");
+                            return new TokenInfo(SyntaxKind.Star, line, column, 1, "*");
 
                         case '/':
-                            return new TokenInfo(TokenKind.Slash, line, column, 1, "/");
+                            return new TokenInfo(SyntaxKind.Slash, line, column, 1, "/");
 
                         case '%':
-                            return new TokenInfo(TokenKind.Percent, line, column, 1, "%");
+                            return new TokenInfo(SyntaxKind.Percent, line, column, 1, "%");
 
                         case '=':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.Equal, line, column, 1, "==");
+                                return new TokenInfo(SyntaxKind.Equal, line, column, 1, "==");
                             }
-                            return new TokenInfo(TokenKind.Assign, line, column, 1, "=");
+                            return new TokenInfo(SyntaxKind.Assign, line, column, 1, "=");
 
                         case '^':
-                            return new TokenInfo(TokenKind.Caret, line, column, 1, "^");
+                            return new TokenInfo(SyntaxKind.Caret, line, column, 1, "^");
 
                         case ',':
-                            return new TokenInfo(TokenKind.Comma, line, column, 1, ",");
+                            return new TokenInfo(SyntaxKind.Comma, line, column, 1, ",");
 
                         case '.':
-                            return new TokenInfo(TokenKind.Period, line, column, 1, ".");
+                            return new TokenInfo(SyntaxKind.Period, line, column, 1, ".");
 
                         case ';':
-                            return new TokenInfo(TokenKind.Semicolon, line, column, 1, ";");
+                            return new TokenInfo(SyntaxKind.Semicolon, line, column, 1, ";");
 
                         case ':':
-                            return new TokenInfo(TokenKind.Colon, line, column, 1, ":");
+                            return new TokenInfo(SyntaxKind.Colon, line, column, 1, ":");
 
                         case '!':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.NotEquals, line, column, 1);
+                                return new TokenInfo(SyntaxKind.NotEquals, line, column, 1);
                             }
-                            return new TokenInfo(TokenKind.Negate, line, column, 1);
+                            return new TokenInfo(SyntaxKind.Negate, line, column, 1);
 
                         case '&':
                             c2 = ReadChar();
                             if (c2 == '&')
                             {
-                                return new TokenInfo(TokenKind.And, line, column, 1, "&&");
+                                return new TokenInfo(SyntaxKind.And, line, column, 1, "&&");
                             }
                             goto default;
 
@@ -223,7 +224,7 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             c2 = ReadChar();
                             if (c2 == '|')
                             {
-                                return new TokenInfo(TokenKind.Or, line, column, 1, "||");
+                                return new TokenInfo(SyntaxKind.Or, line, column, 1, "||");
                             }
                             goto default;
 
@@ -232,81 +233,57 @@ namespace ExpressionEvaluator.LexicalAnalysis
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.OpenAngleBracket, line, column, 1, "<=");
+                                return new TokenInfo(SyntaxKind.OpenAngleBracket, line, column, 1, "<=");
                             }
-                            return new TokenInfo(TokenKind.Less, line, column, 1, "<");
+                            return new TokenInfo(SyntaxKind.Less, line, column, 1, "<");
 
                         case '>':
                             c2 = PeekChar();
                             if (c2 == '=')
                             {
                                 ReadChar();
-                                return new TokenInfo(TokenKind.GreaterOrEqual, line, column, 1, ">=");
+                                return new TokenInfo(SyntaxKind.GreaterOrEqual, line, column, 1, ">=");
                             }
-                            return new TokenInfo(TokenKind.CloseAngleBracket, line, column, 1, ">");
+                            return new TokenInfo(SyntaxKind.CloseAngleBracket, line, column, 1, ">");
 
                         case '(':
-                            return new TokenInfo(TokenKind.OpenParen, line, column, 1, "(");
+                            return new TokenInfo(SyntaxKind.OpenParen, line, column, 1, "(");
 
                         case ')':
-                            return new TokenInfo(TokenKind.CloseParen, line, column, 1, ")");
+                            return new TokenInfo(SyntaxKind.CloseParen, line, column, 1, ")");
 
                         case '\t':
-                            ReadIndentation(column);
-                            break;
+                            return new TokenInfo(SyntaxKind.Tab, line, column, 1);
 
                         case ' ':
-                            break;
+                            int i = 1;
+                            while (true)
+                            {
+                                c = PeekChar();
+
+                                if (c != ' ') break;
+
+                                ReadChar();                               
+                                i++;
+                            } 
+                            return new TokenInfo(SyntaxKind.Whitespace, line, column, i);
 
                         case '\r':
-                            break;
+                            return new TokenInfo(SyntaxKind.CarriageReturn, line, column, 1);
 
                         case '\n':
                             Line++;
                             Column = 1;
-                            Indentation = 0;
-
-                            ReadIndentation();
-                            break;
+                            return new TokenInfo(SyntaxKind.Newline, line, column, 1);
 
                         default:
                             Diagnostics.AddError(string.Format(Strings.Error_InvalidToken, c), new SourceSpan(new SourceLocation(line, column), new SourceLocation(Line, Column)));
-                            return new TokenInfo(TokenKind.Invalid, line, column, 1, c.ToString());
+                            return new TokenInfo(SyntaxKind.Invalid, line, column, 1, c.ToString());
                     }
                 }
             }
 
-            return new TokenInfo(TokenKind.EndOfFile, Line, Column, 0);
-        }
-
-        public void ReadIndentation()
-        {
-            ReadIndentation(Column);
-        }
-
-        private void ReadIndentation(int column)
-        {
-            if (column == 1)
-            {
-                char c2 = PeekChar();
-                if (c2 == '\t')
-                {
-                    Indentation += 4;
-                }
-                else if (c2 == ' ')
-                {
-                    c2 = PeekChar();
-
-                    while (c2 == ' ')
-                    {
-                        ReadChar();
-
-                        Indentation++;
-
-                        c2 = PeekChar();
-                    }
-                }
-            }
+            return new TokenInfo(SyntaxKind.EndOfFile, Line, Column, 0);
         }
 
         private bool IsEofCore
