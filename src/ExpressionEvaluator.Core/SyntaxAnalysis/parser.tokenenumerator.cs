@@ -74,15 +74,15 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     switch (token.Kind)
                     {
                         case SyntaxKind.Identifier:
-                            resultToken = new SyntaxToken(SyntaxKind.Identifier);
+                            resultToken = new SyntaxToken(SyntaxKind.Identifier, token.Width, token.Value);
                             break;
 
                         case SyntaxKind.Number:
-                            resultToken = new SyntaxToken(SyntaxKind.Number);
+                            resultToken = new SyntaxToken(SyntaxKind.Number, token.Width, token.Value);
                             break;
 
                         default:
-                            resultToken = new SyntaxToken(token.Kind);
+                            resultToken = new SyntaxToken(token.Kind, token.Width, token.Value);
                             break;
                     }
 
@@ -118,7 +118,7 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                         case SyntaxKind.Newline:
                             Lexer.ReadToken();
                             yield return new SyntaxTrivia(SyntaxKind.Newline);
-                            break;
+                            yield break;
 
                         default:
                             yield break;

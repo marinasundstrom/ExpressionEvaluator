@@ -15,11 +15,21 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
         private IEnumerable<SyntaxTrivia> leadingTrivia;
         private IEnumerable<SyntaxTrivia> trailingTrivia;
 
+        public SyntaxToken(SyntaxKind kind, int width, string value) 
+        {
+            Kind = kind;
+            Width = width;
+            Value = value;
+
+            leadingTrivia = null;
+            trailingTrivia = null;
+        }
+
         public SyntaxToken(SyntaxKind kind)
         {
             Kind = kind;
             Width = 0;
-            Value = String.Empty;
+            Value = string.Empty;
 
             leadingTrivia = null;
             trailingTrivia = null;
