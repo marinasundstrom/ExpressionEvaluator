@@ -102,22 +102,22 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     {
                         case SyntaxKind.Whitespace:
                             Lexer.ReadToken();
-                            yield return new SyntaxTrivia(SyntaxKind.Whitespace);
+                            yield return new SyntaxTrivia(SyntaxKind.Whitespace, token.Width);
                             break;
 
                         case SyntaxKind.Tab:
                             Lexer.ReadToken();
-                            yield return new SyntaxTrivia(SyntaxKind.Tab);
+                            yield return new SyntaxTrivia(SyntaxKind.Tab, token.Width);
                             break;
 
                         case SyntaxKind.CarriageReturn:
                             Lexer.ReadToken();
-                            yield return new SyntaxTrivia(SyntaxKind.CarriageReturn);
+                            yield return new SyntaxTrivia(SyntaxKind.CarriageReturn, token.Width);
                             break;
 
                         case SyntaxKind.Newline:
                             Lexer.ReadToken();
-                            yield return new SyntaxTrivia(SyntaxKind.Newline);
+                            yield return new SyntaxTrivia(SyntaxKind.Newline, token.Width);
                             yield break;
 
                         default:

@@ -12,13 +12,16 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
         {
             Kind = kind;
             Width = 0;
-            Token = default(SyntaxToken);
+        }
+
+        public SyntaxTrivia(SyntaxKind kind, int width)
+        {
+            Kind = kind;
+            Width = width;
         }
 
         public SyntaxKind Kind { get; }
 
         public int Width { get; }
-               
-        public SyntaxToken Token { get; }
     }
 }
