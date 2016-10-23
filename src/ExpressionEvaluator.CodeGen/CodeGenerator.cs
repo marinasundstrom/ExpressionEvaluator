@@ -114,6 +114,42 @@ namespace ExpressionEvaluator.CodeGen
                                         break;
                                 }
                             }
+                            else
+                            {
+                                var ifExpression = expression as IfThenExpression;
+                                if (ifExpression != null)
+                                {
+                                    var endElseLabel = gen.DefineLabel();
+
+                                    ((ITreeVisitor)this).VisitExpression(ifExpression.Condition);
+
+                                    gen.Emit(OpCodes.Brfalse, endElseLabel);
+
+                                    ((ITreeVisitor)this).VisitExpression(ifExpression.Body);
+
+                                    gen.MarkLabel(endElseLabel);
+
+                                    ((ITreeVisitor)this).VisitExpression(ifExpression.ElseBody);
+                                }
+                                else
+                                {
+                                    var letExpression = expression as LetExpression;
+                                    if (letExpression != null)
+                                    {
+                                        if(letExpression.HasParameters)
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            var local = gen.DeclareLocal(typeof(double));
+
+                                            ((ITreeVisitor)this).VisitExpression(ifExpression.ElseBody);
+                                            gen.Emit(OpCodes.Stloc, local);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

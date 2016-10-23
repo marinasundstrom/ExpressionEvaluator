@@ -30,6 +30,7 @@
   <ItemGroup>
     <Compile Include="SyntaxAnalysis\Ast\Argument.cs" />
     <Compile Include="SyntaxAnalysis\Ast\ArgumentList.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\BlockExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\BooleanLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\FalseLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\IfThenExpression.cs" />

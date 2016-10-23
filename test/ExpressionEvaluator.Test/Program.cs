@@ -32,8 +32,7 @@ fib(40);
 
                 var parser = new Parser(lexer);
 
-                var expression = parser.ParseExpression();
-                var expression2 = parser.ParseExpression();
+                var expression = parser.Parse();
 
                 if (parser.Diagnostics.Any())
                 {
@@ -41,12 +40,17 @@ fib(40);
                     {
                         Console.WriteLine($"{diagnostic.Type}: {diagnostic.Message} ({diagnostic.Span.Start})");
                     }
+                }
+                else
+                {
+                    var generator = new CodeGenerator();
+                    var func = generator.Generate(expression);
 
-                    Console.WriteLine();
+                    var result = func();
+
+                    Console.WriteLine(result);
                 }
             }
-
-            Console.WriteLine();
         }
     }
 }

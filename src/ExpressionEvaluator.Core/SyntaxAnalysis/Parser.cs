@@ -38,6 +38,17 @@ namespace ExpressionEvaluator.SyntaxAnalysis
         /// <value>The diagnostics bag.</value>
         public DiagnosticsBag Diagnostics { get; }
 
+        public Expression Parse()
+        {
+            var block = new BlockExpression();
+            while (!Lexer.IsEof)
+            {
+                var expr = ParseExpression();
+                block.Add(expr);
+            }
+            return block;
+        }
+
         /// <summary>
         /// Parse an expression.
         /// </summary>

@@ -1,5 +1,6 @@
 ﻿using ExpressionEvaluator.LexicalAnalysis;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
@@ -24,5 +25,9 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
         public SyntaxToken Name { get; }
 
         public List<Parameter> Parameters { get; }
+        public System.Boolean HasParameters
+        {
+            get { return !Parameters.Any(); }
+        }
     }
 }
