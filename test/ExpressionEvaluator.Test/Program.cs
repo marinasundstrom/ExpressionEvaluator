@@ -1,5 +1,6 @@
 ﻿using ExpressionEvaluator.CodeGen;
 using ExpressionEvaluator.LexicalAnalysis;
+using ExpressionEvaluator.SemanticAnalysis;
 using ExpressionEvaluator.SyntaxAnalysis;
 using ExpressionEvaluator.Utilites;
 using System;
@@ -33,6 +34,9 @@ fib(40);
                 var parser = new Parser(lexer);
 
                 var expression = parser.Parse();
+
+                var model = new SemanticModel(parser.Diagnostics);
+                var expressionInfo = model.GetExpressionInfo(expression);
 
                 if (parser.Diagnostics.Any())
                 {
