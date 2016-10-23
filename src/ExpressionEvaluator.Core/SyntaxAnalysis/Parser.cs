@@ -237,6 +237,31 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                 case SyntaxKind.Identifier:
                     ReadToken();
                     expr = new IdentifierExpression(token);
+                    //while (MaybeEat(SyntaxKind.Period))
+                    //{
+
+                    //}
+                    if (MaybeEat(SyntaxKind.OpenParen))
+                    {
+                        var argumentList = new ArgumentList<Expression>();
+                        while(!MaybeEat(SyntaxKind.CloseParen))
+                        {
+                            var argExpr = ParseExpression();
+
+                            SyntaxToken comma;
+                            if(MaybeEat(SyntaxKind.Comma, out comma))
+                            {
+                                var t2 = PeekToken();
+                                if(t2.Kind == SyntaxKind.CloseParen)
+                                {
+                                    Diagnostics.AddError(string.Format(Strings.Error_UnexpectedToken, comma), comma.GetSpan());
+                                }
+                            }
+
+                            argumentList.Add(new Argument<Expression>(argExpr, comma));
+                        }
+                        expr = new MethodInvokeExpression((IdentifierExpression)expr, argumentList);
+                    }
                     break;
 
                 case SyntaxKind.TrueKeyword:

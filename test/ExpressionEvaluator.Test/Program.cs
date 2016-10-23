@@ -12,12 +12,13 @@ namespace ExpressionEvaluator.Test
         public static void Main(string[] args)
         {
             var input =
-@"let f a b = 
-    if a > 2 then
-        b
+@"let fib n = 
+    if n <= 2 then
+        1
     else
-        a
-    end
+        fib(n - 1) + fib(n - 2)
+
+fib(40);
 ";
             using (var reader = StringHelpers.TextReaderFromString(input))
             {
@@ -32,6 +33,7 @@ namespace ExpressionEvaluator.Test
                 var parser = new Parser(lexer);
 
                 var expression = parser.ParseExpression();
+                var expression2 = parser.ParseExpression();
 
                 if (parser.Diagnostics.Any())
                 {

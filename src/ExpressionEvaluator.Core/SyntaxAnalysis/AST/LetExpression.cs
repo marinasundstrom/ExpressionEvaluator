@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ExpressionEvaluator.SyntaxAnalysis.AST
 {
-    internal class LetExpression : Expression
+    public class LetExpression : Expression
     {
         public LetExpression(SyntaxToken letKeyword, SyntaxToken name, SyntaxToken assign, Expression assignedExpression)
         {

@@ -28,9 +28,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SyntaxAnalysis\Ast\Argument.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\ArgumentList.cs" />
     <Compile Include="SyntaxAnalysis\Ast\BooleanLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\FalseLiteralExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\IfThenExpression.cs" />
+    <Compile Include="SyntaxAnalysis\Ast\MethodInvokeExpression.cs" />
     <Compile Include="SyntaxAnalysis\Ast\Parameter.cs" />
     <Compile Include="SyntaxAnalysis\Ast\SyntaxKind.cs" />
     <Compile Include="SyntaxAnalysis\Ast\SyntaxNode.cs" />
