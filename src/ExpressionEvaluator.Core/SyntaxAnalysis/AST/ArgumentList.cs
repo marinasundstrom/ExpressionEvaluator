@@ -8,10 +8,17 @@ namespace ExpressionEvaluator.SyntaxAnalysis.AST
     {
         private List<Argument<T>> _items;
 
-        public ArgumentList()
+        public ArgumentList(SyntaxToken openParen, IEnumerable<Argument<T>> arguments, SyntaxToken closeParen)
         {
-            _items = new List<Argument<T>>();
+            OpenParen = openParen;
+            CloseParen = closeParen;
+
+            _items = new List<Argument<T>>(arguments);
         }
+
+        public SyntaxToken OpenParen { get; }
+
+        public SyntaxToken CloseParen { get; }
 
         public void Add(Argument<T> arg)
         {

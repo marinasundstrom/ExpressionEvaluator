@@ -252,10 +252,14 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                     //{
 
                     //}
-                    if (MaybeEat(SyntaxKind.OpenParen))
+                    SyntaxToken openParen;
+                    SyntaxToken closeParen;
+                    if (MaybeEat(SyntaxKind.OpenParen, out openParen))
                     {
-                        var argumentList = new ArgumentList<Expression>();
-                        while(!MaybeEat(SyntaxKind.CloseParen))
+                        ArgumentList<Expression> argumentList = null;
+                        var list = new List<Argument<Expression>>();
+
+                        while(!MaybeEat(SyntaxKind.CloseParen, out closeParen))
                         {
                             var argExpr = ParseExpression();
 
@@ -269,8 +273,9 @@ namespace ExpressionEvaluator.SyntaxAnalysis
                                 }
                             }
 
-                            argumentList.Add(new Argument<Expression>(argExpr, comma));
+                            list.Add(new Argument<Expression>(argExpr, comma));
                         }
+                        argumentList = new ArgumentList<Expression>(openParen, list, closeParen);
                         expr = new MethodInvokeExpression((IdentifierExpression)expr, argumentList);
                     }
                     break;

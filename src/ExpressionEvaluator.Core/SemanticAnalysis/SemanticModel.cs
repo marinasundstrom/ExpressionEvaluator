@@ -41,11 +41,18 @@ namespace ExpressionEvaluator.SemanticAnalysis
             IExpressionInfo expressionInfo = null;
             ITypeSymbol type = null;
 
-            switch(expression)
+            switch (expression)
             {
                 case LetExpression le:
-                    var let = GetExpressionInfo(le.AssignedExpression);
-                    expressionInfo = new ExpressionInfo(le, type);
+                    if (le.HasParameters)
+                    {
+                        // Function
+                    }
+                    else
+                    { 
+                        var let = GetExpressionInfo(le.AssignedExpression);
+                        expressionInfo = new ExpressionInfo(le, type);
+                    }
                     break;
 
                 case BinaryExpression be:
@@ -64,10 +71,39 @@ namespace ExpressionEvaluator.SemanticAnalysis
                     expressionInfo = AnalyzeIfThenExpression(be);
                     break;
 
+                case MethodInvokeExpression methodInvokeExpr:
+                    expressionInfo = AnalyzeMethodInvokeExpression(methodInvokeExpr);
+                    break;
+
+                case BlockExpression blockExpr:
+                    expressionInfo = AnalyzeBlockExpression(blockExpr);
+                    break;
+
                 default:
                     throw new Exception();
             }
           
+            return expressionInfo;
+        }
+
+        private IExpressionInfo AnalyzeMethodInvokeExpression(MethodInvokeExpression methodInvokeExpr)
+        {
+            var type = GetTypeSymbol(typeof(object));
+
+            var expressionInfo = new ExpressionInfo(methodInvokeExpr, type);
+            return expressionInfo;
+        }
+
+        private IExpressionInfo AnalyzeBlockExpression(BlockExpression expression)
+        {
+            var type = GetTypeSymbol(typeof(object));
+
+            foreach(var expr in expression)
+            {
+                var ei = AnalyzeExpression(expr);
+            }
+
+            var expressionInfo = new ExpressionInfo(expression, type);
             return expressionInfo;
         }
 
@@ -93,7 +129,7 @@ namespace ExpressionEvaluator.SemanticAnalysis
             }
             else
             {
-                Diagnostics.AddError("The return types in each codepath are not compatible with each other.", new SourceSpan(be.IfKeyword.GetStartLocation(), be.EndKeyword.GetEndLocation()));
+                //Diagnostics.AddError("The return types in each codepath are not compatible with each other.", new SourceSpan(be.IfKeyword.GetStartLocation(), be.EndKeyword.GetEndLocation()));
                 type = objectSymbol;
             }
 
